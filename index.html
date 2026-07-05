@@ -164,12 +164,17 @@
     position:relative;
     transform:rotate(var(--tilt));
     transition:transform 0.3s ease, box-shadow 0.3s ease;
-    /* Develop filter: starts washed-out pale */
     filter: brightness(2.5) saturate(0) contrast(0.4) sepia(0.3);
     animation: develop 3s ease-out forwards;
     animation-play-state:paused;
-    box-shadow: 0 6px 22px rgba(0,0,0,0.4), 0 18px 50px rgba(0,0,0,0.3);
-    /* Hanging photo: slight drop shadow below like a print on a line */
+    /* Polaroid: thick white border, heavy bottom strip */
+    background: #f5f2ec;
+    padding: 10px 10px 52px 10px;
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.18),
+      0 10px 28px rgba(0,0,0,0.38),
+      0 22px 55px rgba(0,0,0,0.26),
+      inset 0 0 0 1px rgba(0,0,0,0.05);
     transform-origin: center top;
   }
   .photo-card.developing{
@@ -202,22 +207,37 @@
     display:block; width:100%; height:100%;
     object-fit:cover;
   }
-  .photo-card::after{
+  /* Vignette sits inside the image face, not over the white border */
+  .photo-card .face::after{
     content:'';
     position:absolute; inset:0;
-    background:radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,0.2) 100%);
-    pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,0.18) 100%);
+    pointer-events:none; z-index:2;
   }
-  /* Hover overlay — darkroom label style */
+  /* Hover gradient — inside image face only */
   .photo-overlay{
-    position:absolute; bottom:0; left:0; right:0;
-    background:linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
-    padding:2rem 1rem 0.8rem;
+    position:absolute;
+    bottom:52px; /* sits just above the polaroid bottom strip */
+    left:10px; right:10px;
+    background:linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
+    padding:1.6rem 0.8rem 0.7rem;
     opacity:0; transition:opacity 0.25s;
-    font-size:0.62rem; letter-spacing:0.16em; text-transform:uppercase;
-    color:rgba(255,255,255,0.9);
+    font-size:0.6rem; letter-spacing:0.16em; text-transform:uppercase;
+    color:rgba(255,255,255,0.92); z-index:3;
   }
   .photo-card:hover .photo-overlay{ opacity:1; }
+  /* Caption in the white Polaroid strip at the bottom */
+  .polaroid-caption{
+    position:absolute;
+    bottom:0; left:10px; right:10px;
+    height:52px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:#7a6a58;
+    opacity:0; transition:opacity 0.2s;
+    font-family:'Work Sans', sans-serif;
+  }
+  .photo-card:hover .polaroid-caption{ opacity:1; }
 
   /* Hanging string above each photo */
   .scatter-item::before{
@@ -390,8 +410,10 @@
       width:88vw !important; margin:1.8rem auto !important; display:block;
     }
     .scatter-item::before, .scatter-item::after{ display:none !important; }
-    .photo-card, .video-card{ transform:none !important; width:100% !important; }
-    .photo-card img{ height:320px !important; }
+    .photo-card{ transform:none !important; width:100% !important; }
+    .video-card{ transform:none !important; width:100% !important; }
+    .photo-card .face{ width:100% !important; height:280px !important; }
+    .photo-card .face img{ width:100% !important; height:100% !important; }
     .video-card video{ height:220px !important; }
     .series-grid{ grid-template-columns:1fr; padding:1.5rem; }
     .about-wrap{ padding:6rem 1.5rem 4rem; }
@@ -555,9 +577,12 @@
     wrap.style.cssText = `left:${p.lp}%;top:${p.tp}px;width:${p.w}px;`;
     wrap.innerHTML = `
       <div class="photo-card" style="--tilt:${p.tilt};width:${p.w}px">
-        <img src="${p.file}" alt="${p.title}" loading="lazy"
-          style="width:${p.w}px;height:${p.h}px">
+        <div class="face" style="width:${p.w}px;height:${p.h}px;overflow:hidden;position:relative;">
+          <img src="${p.file}" alt="${p.title}" loading="lazy"
+            style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
         <div class="photo-overlay">${p.title}</div>
+        <div class="polaroid-caption">${p.title}</div>
       </div>`;
     wrap.addEventListener('click', ()=> openLightbox(i));
     stage.appendChild(wrap);
