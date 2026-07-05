@@ -226,7 +226,16 @@
     color:rgba(255,255,255,0.92); z-index:3;
   }
   .photo-card:hover .photo-overlay{ opacity:1; }
-  /* Caption in the white Polaroid strip at the bottom */
+  /* Screenshot already has its own border — skip polaroid frame */
+  .photo-card.no-border{
+    background: transparent;
+    padding: 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 22px 55px rgba(0,0,0,0.28);
+  }
+  .photo-card.no-border .photo-overlay{
+    bottom:0;
+    left:0; right:0;
+  }
   .polaroid-caption{
     position:absolute;
     bottom:0; left:10px; right:10px;
@@ -520,26 +529,26 @@
 <script>
   /* ── DATA ── */
   const photos = [
-    { file:'IMG_7441.jpeg',  title:'Stillness',     lp:3,  tp:80,  w:320, h:480, tilt:'-3deg'   },
-    { file:'IMG_8381.jpeg',  title:'Blue',          lp:73, tp:60,  w:310, h:470, tilt:'2.2deg'  },
-    { file:'IMG_4776.jpeg',  title:'Sisters',       lp:6,  tp:650, w:455, h:305, tilt:'-1.8deg' },
-    { file:'IMG_8555.jpeg',  title:'Dusk Prayer',   lp:42, tp:580, w:445, h:298, tilt:'2.5deg'  },
-    { file:'IMG_9195.jpeg',  title:'The Wall',      lp:74, tp:610, w:280, h:425, tilt:'-2.8deg' },
-    { file:'IMG_5498.jpeg',  title:'Bond',          lp:3,  tp:1120,w:305, h:460, tilt:'3deg'    },
-    { file:'IMG_7617.jpeg',  title:'Purple House',  lp:73, tp:1090,w:295, h:445, tilt:'1.8deg'  },
-    { file:'IMG_7069.jpeg',  title:'Night Wall',    lp:5,  tp:1660,w:455, h:305, tilt:'-2.3deg' },
-    { file:'IMG_7006.jpeg',  title:'Flower',        lp:36, tp:1590,w:435, h:292, tilt:'1.6deg'  },
-    { file:'IMG_0020.jpeg',  title:'Open',          lp:66, tp:1625,w:450, h:302, tilt:'-1.2deg' },
-    { file:'IMG_6595.jpeg',  title:'Yellow Dress',  lp:3,  tp:2080,w:305, h:455, tilt:'2.7deg'  },
-    { file:'IMG_8762.jpeg',  title:'Yellow',        lp:73, tp:2050,w:290, h:435, tilt:'-3.2deg' },
-    { file:'IMG_9233.jpeg',  title:'Bedroom',       lp:6,  tp:2630,w:450, h:302, tilt:'-2deg'   },
-    { file:'Screenshot 2026-07-05 103457.png', title:'Laughter', lp:44, tp:2560, w:435, h:314, tilt:'1.4deg' },
+    { file:'IMG_7441.jpeg',  title:'Stillness',     lp:2,  tp:80,  w:360, h:540, tilt:'-3deg'   },
+    { file:'IMG_8381.jpeg',  title:'Blue',          lp:71, tp:60,  w:350, h:530, tilt:'2.2deg'  },
+    { file:'IMG_4776.jpeg',  title:'Sisters',       lp:5,  tp:720, w:510, h:342, tilt:'-1.8deg' },
+    { file:'IMG_8555.jpeg',  title:'Dusk Prayer',   lp:40, tp:640, w:500, h:335, tilt:'2.5deg'  },
+    { file:'IMG_9195.jpeg',  title:'The Wall',      lp:72, tp:670, w:320, h:480, tilt:'-2.8deg' },
+    { file:'IMG_5498.jpeg',  title:'Bond',          lp:2,  tp:1240,w:345, h:520, tilt:'3deg'    },
+    { file:'IMG_7617.jpeg',  title:'Purple House',  lp:71, tp:1210,w:335, h:505, tilt:'1.8deg'  },
+    { file:'IMG_7069.jpeg',  title:'Night Wall',    lp:4,  tp:1840,w:510, h:342, tilt:'-2.3deg' },
+    { file:'IMG_7006.jpeg',  title:'Flower',        lp:35, tp:1760,w:490, h:328, tilt:'1.6deg'  },
+    { file:'IMG_0020.jpeg',  title:'Open',          lp:65, tp:1800,w:505, h:338, tilt:'-1.2deg' },
+    { file:'IMG_6595.jpeg',  title:'Yellow Dress',  lp:2,  tp:2310,w:345, h:515, tilt:'2.7deg'  },
+    { file:'IMG_8762.jpeg',  title:'Yellow',        lp:71, tp:2280,w:330, h:495, tilt:'-3.2deg' },
+    { file:'IMG_9233.jpeg',  title:'Bedroom',       lp:5,  tp:2920,w:510, h:342, tilt:'-2deg'   },
+    { file:'Screenshot 2026-07-05 103457.png', title:'Laughter', lp:40, tp:2840, w:490, h:360, tilt:'1.4deg', noBorder:true },
   ];
 
   const videos = [
-    { file:'HAIR.MP4',  title:'Hair', lp:27, tp:38,  w:565, h:322, tilt:'1deg'   },
-    { file:'Gap 3.mp4', title:'Gap',  lp:27, tp:1040,w:550, h:314, tilt:'-1.5deg'},
-    { file:'Bam.mp4',   title:'Bam',  lp:27, tp:1980,w:545, h:312, tilt:'1.2deg' },
+    { file:'HAIR.MP4',  title:'Hair', lp:26, tp:38,  w:620, h:355, tilt:'1deg'   },
+    { file:'Gap 3.mp4', title:'Gap',  lp:26, tp:1150,w:605, h:346, tilt:'-1.5deg'},
+    { file:'Bam.mp4',   title:'Bam',  lp:26, tp:2180,w:600, h:344, tilt:'1.2deg' },
   ];
 
   /* ── LIGHTBOX ── */
@@ -575,14 +584,15 @@
     const wrap = document.createElement('div');
     wrap.className = 'scatter-item is-photo';
     wrap.style.cssText = `left:${p.lp}%;top:${p.tp}px;width:${p.w}px;`;
+    const cardClass = p.noBorder ? 'photo-card no-border' : 'photo-card';
     wrap.innerHTML = `
-      <div class="photo-card" style="--tilt:${p.tilt};width:${p.w}px">
+      <div class="${cardClass}" style="--tilt:${p.tilt};width:${p.w}px">
         <div class="face" style="width:${p.w}px;height:${p.h}px;overflow:hidden;position:relative;">
           <img src="${p.file}" alt="${p.title}" loading="lazy"
             style="width:100%;height:100%;object-fit:cover;display:block;">
         </div>
         <div class="photo-overlay">${p.title}</div>
-        <div class="polaroid-caption">${p.title}</div>
+        ${p.noBorder ? '' : `<div class="polaroid-caption">${p.title}</div>`}
       </div>`;
     wrap.addEventListener('click', ()=> openLightbox(i));
     stage.appendChild(wrap);
