@@ -167,11 +167,13 @@
     filter: brightness(2.5) saturate(0) contrast(0.4) sepia(0.3);
     animation: develop 3s ease-out forwards;
     animation-play-state:paused;
-    background: transparent;
-    padding: 0;
+    /* Polaroid frame */
+    background: #f5f2ec;
+    padding: 10px 10px 52px 10px;
     box-shadow:
-      0 6px 22px rgba(0,0,0,0.4),
-      0 18px 50px rgba(0,0,0,0.3);
+      0 2px 4px rgba(0,0,0,0.2),
+      0 10px 28px rgba(0,0,0,0.4),
+      0 22px 55px rgba(0,0,0,0.28);
     transform-origin: center top;
   }
   .photo-card.developing{
@@ -205,18 +207,18 @@
     object-fit:cover;
     object-position:center center;
   }
-  /* Vignette sits inside the image face, not over the white border */
+  /* Vignette sits inside the image face */
   .photo-card .face::after{
     content:'';
     position:absolute; inset:0;
     background:radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,0.18) 100%);
     pointer-events:none; z-index:2;
   }
-  /* Hover gradient — inside image face only */
+  /* Hover gradient — inside image face, sits above the polaroid strip */
   .photo-overlay{
     position:absolute;
-    bottom:0;
-    left:0; right:0;
+    bottom:52px;
+    left:10px; right:10px;
     background:linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
     padding:1.6rem 0.8rem 0.7rem;
     opacity:0; transition:opacity 0.25s;
@@ -224,8 +226,70 @@
     color:rgba(255,255,255,0.92); z-index:3;
   }
   .photo-card:hover .photo-overlay{ opacity:1; }
+  /* Caption in the white polaroid strip */
+  .polaroid-caption{
+    position:absolute;
+    bottom:0; left:10px; right:10px;
+    height:52px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:#7a6a58;
+    opacity:0; transition:opacity 0.2s;
+  }
+  .photo-card:hover .polaroid-caption{ opacity:1; }
+  /* Screenshot — no polaroid frame, keep everything else */
+  .photo-card.no-border{
+    background:transparent; padding:0;
+    box-shadow:0 6px 22px rgba(0,0,0,0.4), 0 18px 50px rgba(0,0,0,0.3);
+  }
+  .photo-card.no-border .photo-overlay{ bottom:0; left:0; right:0; }
 
-  /* hanging string */
+  /* ===== HANGING VIDEO — wire + clothespin clips ===== */
+  .video-wrap{
+    position:relative;
+    padding-top:48px; /* space for wire and clips above */
+  }
+  /* The wire stretching wider than the video */
+  .video-wire{
+    position:absolute;
+    top:10px; left:-30px; right:-30px;
+    height:2px;
+    background:linear-gradient(90deg,
+      transparent 0%,
+      rgba(243,230,200,0.35) 4%,
+      rgba(243,230,200,0.5) 50%,
+      rgba(243,230,200,0.35) 96%,
+      transparent 100%
+    );
+    z-index:5;
+  }
+  /* Clothespin clips */
+  .clip{
+    position:absolute;
+    top:2px;
+    width:10px; height:28px;
+    background:linear-gradient(180deg, #5a4030, #3a2818);
+    border-radius:2px 2px 3px 3px;
+    z-index:6;
+    box-shadow:0 2px 4px rgba(0,0,0,0.4);
+  }
+  .clip::after{
+    content:'';
+    position:absolute;
+    bottom:4px; left:50%;
+    transform:translateX(-50%);
+    width:4px; height:8px;
+    background:rgba(255,255,255,0.12);
+    border-radius:1px;
+  }
+  .clip-left{ left:18%; }
+  .clip-right{ right:18%; }
+  /* Gentle sway animation */
+  @keyframes sway{
+    0%,100%{ transform:rotate(var(--tilt)); }
+    30%{ transform:rotate(calc(var(--tilt) + 0.6deg)) translateX(1px); }
+    70%{ transform:rotate(calc(var(--tilt) - 0.6deg)) translateX(-1px); }
+  }
 
   /* Hanging string above each photo */
   .scatter-item::before{
@@ -258,12 +322,17 @@
     box-shadow:0 8px 30px rgba(0,0,0,0.55);
     overflow:hidden;
     transform:rotate(var(--tilt));
-    transition:transform 0.3s ease;
+    transform-origin: center top;
     background:#000;
-    animation: fadein 1s ease-out forwards;
+    animation: sway 6s ease-in-out infinite;
     animation-play-state:paused;
   }
   .video-card.developing{ animation-play-state:running; }
+  .video-card:hover{
+    animation-play-state:paused;
+    transform:rotate(calc(var(--tilt)*0.1)) scale(1.02) translateY(-6px);
+    z-index:50;
+  }
   @keyframes fadein{
     from{ opacity:0; }
     to{ opacity:1; }
@@ -508,37 +577,37 @@
 <script>
   /* ── DATA ── */
   const photos = [
-    // ── ROW 1: max bottom 620 ──
+    // ── ROW 1: max bottom 682 ──
     { file:'IMG_7441.jpeg',  title:'Stillness',     lp:2,  tp:80,   w:360, h:540, tilt:'-3deg'   },
     { file:'IMG_8381.jpeg',  title:'Blue',          lp:71, tp:80,   w:350, h:530, tilt:'2.2deg'  },
-    // ── ROW 2: starts 780, max bottom 1290 ──
-    { file:'IMG_4776.jpeg',  title:'Sisters',       lp:4,  tp:850,  w:510, h:342, tilt:'-1.8deg' },
-    { file:'IMG_8555.jpeg',  title:'Dusk Prayer',   lp:38, tp:780,  w:500, h:335, tilt:'2.5deg'  },
-    { file:'IMG_9195.jpeg',  title:'The Wall',      lp:72, tp:810,  w:320, h:480, tilt:'-2.8deg' },
-    // ── ROW 3: starts 1860, max bottom 2400 ──
-    { file:'IMG_5498.jpeg',  title:'Bond',          lp:2,  tp:1880, w:345, h:520, tilt:'3deg'    },
-    { file:'IMG_7617.jpeg',  title:'Purple House',  lp:71, tp:1860, w:335, h:505, tilt:'1.8deg'  },
-    // ── ROW 4: starts 2530, max bottom 2942 ──
-    { file:'IMG_7069.jpeg',  title:'Night Wall',    lp:3,  tp:2600, w:510, h:342, tilt:'-2.3deg' },
-    { file:'IMG_7006.jpeg',  title:'Flower',        lp:34, tp:2530, w:490, h:328, tilt:'1.6deg'  },
-    { file:'IMG_0020.jpeg',  title:'Open',          lp:65, tp:2560, w:505, h:338, tilt:'-1.2deg' },
-    // ── ROW 5: starts 3600, max bottom 4095 ──
-    { file:'IMG_6595.jpeg',  title:'Yellow Dress',  lp:2,  tp:3620, w:510, h:342, tilt:'-2deg',  contain:true },
-    { file:'IMG_8762.jpeg',  title:'Yellow',        lp:71, tp:3600, w:330, h:495, tilt:'-3.2deg' },
-    // ── ROW 6: starts 4220, max bottom 4632 ──
-    { file:'IMG_9233.jpeg',  title:'Bedroom',       lp:4,  tp:4290, w:510, h:342, tilt:'-2deg'   },
-    { file:'Screenshot 2026-07-05 103457.png', title:'Laughter', lp:42, tp:4220, w:490, h:360, tilt:'1.4deg', noBorder:true },
-    // ── ROW 7: starts 4820, max bottom 5375 ──
-    { file:'IMG_0610.jpeg',  title:'Field',         lp:34, tp:4820, w:370, h:555, tilt:'-1.8deg' },
+    // ── ROW 2: starts 830, max bottom 1402 ──
+    { file:'IMG_4776.jpeg',  title:'Sisters',       lp:4,  tp:900,  w:510, h:342, tilt:'-1.8deg' },
+    { file:'IMG_8555.jpeg',  title:'Dusk Prayer',   lp:38, tp:830,  w:500, h:335, tilt:'2.5deg'  },
+    { file:'IMG_9195.jpeg',  title:'The Wall',      lp:72, tp:860,  w:320, h:480, tilt:'-2.8deg' },
+    // ── ROW 3: starts 2000, max bottom 2602 ──
+    { file:'IMG_5498.jpeg',  title:'Bond',          lp:2,  tp:2020, w:345, h:520, tilt:'3deg'    },
+    { file:'IMG_7617.jpeg',  title:'Purple House',  lp:71, tp:2000, w:335, h:505, tilt:'1.8deg'  },
+    // ── ROW 4: starts 2750, max bottom 3224 ──
+    { file:'IMG_7069.jpeg',  title:'Night Wall',    lp:3,  tp:2820, w:510, h:342, tilt:'-2.3deg' },
+    { file:'IMG_7006.jpeg',  title:'Flower',        lp:34, tp:2750, w:490, h:328, tilt:'1.6deg'  },
+    { file:'IMG_0020.jpeg',  title:'Open',          lp:65, tp:2780, w:505, h:338, tilt:'-1.2deg' },
+    // ── ROW 5: starts 3920, max bottom 4477 ──
+    { file:'IMG_6595.jpeg',  title:'Yellow Dress',  lp:2,  tp:3940, w:510, h:342, tilt:'-2deg',  contain:true },
+    { file:'IMG_8762.jpeg',  title:'Yellow',        lp:71, tp:3920, w:330, h:495, tilt:'-3.2deg' },
+    // ── ROW 6: starts 4610, max bottom 5084 ──
+    { file:'IMG_9233.jpeg',  title:'Bedroom',       lp:4,  tp:4680, w:510, h:342, tilt:'-2deg'   },
+    { file:'Screenshot 2026-07-05 103457.png', title:'Laughter', lp:42, tp:4610, w:490, h:360, tilt:'1.4deg', noBorder:true },
+    // ── ROW 7: starts 5260, max bottom 5877 ──
+    { file:'IMG_0610.jpeg',  title:'Field',         lp:34, tp:5260, w:370, h:555, tilt:'-1.8deg' },
   ];
 
   const videos = [
-    // Between row 1 and 2: top 80, bottom 435
+    // Alongside row 1: top 80, bottom 475
     { file:'HAIR.MP4',  title:'Hair', lp:25, tp:80,   w:620, h:355, tilt:'1deg'   },
-    // Between row 2 and 3: top 1430, bottom 1776
-    { file:'Gap 3.mp4', title:'Gap',  lp:25, tp:1430, w:605, h:346, tilt:'-1.5deg'},
-    // Between row 4 and 5: top 3100, bottom 3444
-    { file:'Bam.mp4',   title:'Bam',  lp:25, tp:3100, w:600, h:344, tilt:'1.2deg' },
+    // Between row 2 and 3: top 1540, bottom 1886
+    { file:'Gap 3.mp4', title:'Gap',  lp:25, tp:1540, w:605, h:346, tilt:'-1.5deg'},
+    // Between row 4 and 5: top 3380, bottom 3724
+    { file:'Bam.mp4',   title:'Bam',  lp:25, tp:3380, w:600, h:344, tilt:'1.2deg' },
   ];
 
   /* ── LIGHTBOX ── */
@@ -578,11 +647,12 @@
     const faceStyle = `width:${p.w}px;height:${p.h}px;overflow:hidden;position:relative;`;
     wrap.innerHTML = `
       <div class="${cardClass}" style="--tilt:${p.tilt};width:${p.w}px">
-        <div class="face" style="${faceStyle}${p.contain ? 'background:#000;' : ''}">
+        <div class="face" style="${faceStyle}${p.contain ? 'background:#111;' : ''}">
           <img src="${p.file}" alt="${p.title}" loading="lazy"
             style="width:100%;height:100%;object-fit:${p.contain ? 'contain' : 'cover'};object-position:center center;display:block;">
         </div>
         <div class="photo-overlay">${p.title}</div>
+        ${p.noBorder ? '' : `<div class="polaroid-caption">${p.title}</div>`}
       </div>`;
     wrap.addEventListener('click', ()=> openLightbox(i));
     stage.appendChild(wrap);
@@ -593,12 +663,17 @@
     wrap.className = 'scatter-item';
     wrap.style.cssText = `left:${v.lp}%;top:${v.tp}px;width:${v.w}px;`;
     wrap.innerHTML = `
-      <div class="video-card" style="--tilt:${v.tilt};width:${v.w}px">
-        <video src="${v.file}" style="height:${v.h}px"
-          autoplay muted loop playsinline preload="auto"
-          id="vid-${v.title}"></video>
-        <button class="sound-btn"
-          onclick="toggleSound(this,'vid-${v.title}')">🔇 Sound</button>
+      <div class="video-wrap">
+        <div class="video-wire"></div>
+        <div class="clip clip-left"></div>
+        <div class="clip clip-right"></div>
+        <div class="video-card" style="--tilt:${v.tilt};width:${v.w}px">
+          <video src="${v.file}" style="height:${v.h}px"
+            autoplay muted loop playsinline preload="auto"
+            id="vid-${v.title}"></video>
+          <button class="sound-btn"
+            onclick="toggleSound(this,'vid-${v.title}')">🔇 Sound</button>
+        </div>
       </div>`;
     stage.appendChild(wrap);
   });
