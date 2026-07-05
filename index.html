@@ -508,34 +508,37 @@
 <script>
   /* ── DATA ── */
   const photos = [
-    // ── ROW 1 — two tall portraits flanking the video ──
-    { file:'IMG_7441.jpeg',  title:'Stillness',     lp:2,  tp:90,   w:360, h:540, tilt:'-3deg'   },
-    { file:'IMG_8381.jpeg',  title:'Blue',          lp:71, tp:70,   w:350, h:530, tilt:'2.2deg'  },
-    // ── ROW 2 — two landscapes + tall ──
-    { file:'IMG_4776.jpeg',  title:'Sisters',       lp:4,  tp:800,  w:510, h:342, tilt:'-1.8deg' },
-    { file:'IMG_8555.jpeg',  title:'Dusk Prayer',   lp:38, tp:720,  w:500, h:335, tilt:'2.5deg'  },
-    { file:'IMG_9195.jpeg',  title:'The Wall',      lp:72, tp:750,  w:320, h:480, tilt:'-2.8deg' },
-    // ── ROW 3 — two tall portraits flanking video ──
-    { file:'IMG_5498.jpeg',  title:'Bond',          lp:2,  tp:1380, w:345, h:520, tilt:'3deg'    },
-    { file:'IMG_7617.jpeg',  title:'Purple House',  lp:71, tp:1350, w:335, h:505, tilt:'1.8deg'  },
-    // ── ROW 4 — three landscapes ──
-    { file:'IMG_7069.jpeg',  title:'Night Wall',    lp:3,  tp:2060, w:510, h:342, tilt:'-2.3deg' },
-    { file:'IMG_7006.jpeg',  title:'Flower',        lp:34, tp:1980, w:490, h:328, tilt:'1.6deg'  },
-    { file:'IMG_0020.jpeg',  title:'Open',          lp:65, tp:2020, w:505, h:338, tilt:'-1.2deg' },
-    // ── ROW 5 — landscape Yellow Dress + tall Yellow, flanking video ──
-    { file:'IMG_6595.jpeg',  title:'Yellow Dress',  lp:2,  tp:2580, w:510, h:342, tilt:'-2deg', contain:true },
-    { file:'IMG_8762.jpeg',  title:'Yellow',        lp:71, tp:2560, w:330, h:495, tilt:'-3.2deg' },
-    // ── ROW 6 — landscape + wide screenshot + new portrait ──
-    { file:'IMG_9233.jpeg',  title:'Bedroom',       lp:4,  tp:3260, w:510, h:342, tilt:'-2deg'   },
-    { file:'Screenshot 2026-07-05 103457.png', title:'Laughter', lp:42, tp:3180, w:490, h:360, tilt:'1.4deg', noBorder:true },
-    // ── ROW 7 — new portrait centred ──
-    { file:'IMG_0610.jpeg',  title:'Field',         lp:35, tp:3720, w:370, h:555, tilt:'-1.8deg' },
+    // ── ROW 1: max bottom 620 ──
+    { file:'IMG_7441.jpeg',  title:'Stillness',     lp:2,  tp:80,   w:360, h:540, tilt:'-3deg'   },
+    { file:'IMG_8381.jpeg',  title:'Blue',          lp:71, tp:80,   w:350, h:530, tilt:'2.2deg'  },
+    // ── ROW 2: starts 780, max bottom 1290 ──
+    { file:'IMG_4776.jpeg',  title:'Sisters',       lp:4,  tp:850,  w:510, h:342, tilt:'-1.8deg' },
+    { file:'IMG_8555.jpeg',  title:'Dusk Prayer',   lp:38, tp:780,  w:500, h:335, tilt:'2.5deg'  },
+    { file:'IMG_9195.jpeg',  title:'The Wall',      lp:72, tp:810,  w:320, h:480, tilt:'-2.8deg' },
+    // ── ROW 3: starts 1860, max bottom 2400 ──
+    { file:'IMG_5498.jpeg',  title:'Bond',          lp:2,  tp:1880, w:345, h:520, tilt:'3deg'    },
+    { file:'IMG_7617.jpeg',  title:'Purple House',  lp:71, tp:1860, w:335, h:505, tilt:'1.8deg'  },
+    // ── ROW 4: starts 2530, max bottom 2942 ──
+    { file:'IMG_7069.jpeg',  title:'Night Wall',    lp:3,  tp:2600, w:510, h:342, tilt:'-2.3deg' },
+    { file:'IMG_7006.jpeg',  title:'Flower',        lp:34, tp:2530, w:490, h:328, tilt:'1.6deg'  },
+    { file:'IMG_0020.jpeg',  title:'Open',          lp:65, tp:2560, w:505, h:338, tilt:'-1.2deg' },
+    // ── ROW 5: starts 3600, max bottom 4095 ──
+    { file:'IMG_6595.jpeg',  title:'Yellow Dress',  lp:2,  tp:3620, w:510, h:342, tilt:'-2deg',  contain:true },
+    { file:'IMG_8762.jpeg',  title:'Yellow',        lp:71, tp:3600, w:330, h:495, tilt:'-3.2deg' },
+    // ── ROW 6: starts 4220, max bottom 4632 ──
+    { file:'IMG_9233.jpeg',  title:'Bedroom',       lp:4,  tp:4290, w:510, h:342, tilt:'-2deg'   },
+    { file:'Screenshot 2026-07-05 103457.png', title:'Laughter', lp:42, tp:4220, w:490, h:360, tilt:'1.4deg', noBorder:true },
+    // ── ROW 7: starts 4820, max bottom 5375 ──
+    { file:'IMG_0610.jpeg',  title:'Field',         lp:34, tp:4820, w:370, h:555, tilt:'-1.8deg' },
   ];
 
   const videos = [
-    { file:'HAIR.MP4',  title:'Hair', lp:25, tp:50,   w:620, h:355, tilt:'1deg'   },
-    { file:'Gap 3.mp4', title:'Gap',  lp:25, tp:1280, w:605, h:346, tilt:'-1.5deg'},
-    { file:'Bam.mp4',   title:'Bam',  lp:25, tp:2440, w:600, h:344, tilt:'1.2deg' },
+    // Between row 1 and 2: top 80, bottom 435
+    { file:'HAIR.MP4',  title:'Hair', lp:25, tp:80,   w:620, h:355, tilt:'1deg'   },
+    // Between row 2 and 3: top 1430, bottom 1776
+    { file:'Gap 3.mp4', title:'Gap',  lp:25, tp:1430, w:605, h:346, tilt:'-1.5deg'},
+    // Between row 4 and 5: top 3100, bottom 3444
+    { file:'Bam.mp4',   title:'Bam',  lp:25, tp:3100, w:600, h:344, tilt:'1.2deg' },
   ];
 
   /* ── LIGHTBOX ── */
