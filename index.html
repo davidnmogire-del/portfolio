@@ -206,6 +206,7 @@
   .photo-card img{
     display:block; width:100%; height:100%;
     object-fit:cover;
+    object-position:center center;
   }
   /* Vignette sits inside the image face, not over the white border */
   .photo-card .face::after{
@@ -226,15 +227,23 @@
     color:rgba(255,255,255,0.92); z-index:3;
   }
   .photo-card:hover .photo-overlay{ opacity:1; }
-  /* Screenshot already has its own border — skip polaroid frame */
+
+  /* Screenshot — no polaroid frame only, everything else stays */
   .photo-card.no-border{
     background: transparent;
     padding: 0;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 22px 55px rgba(0,0,0,0.28);
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.18),
+      0 10px 28px rgba(0,0,0,0.38),
+      0 22px 55px rgba(0,0,0,0.26);
   }
   .photo-card.no-border .photo-overlay{
     bottom:0;
     left:0; right:0;
+  }
+  .photo-card.no-border:hover{
+    transform:rotate(calc(var(--tilt)*0.1)) scale(1.02) translateY(-8px);
+    box-shadow:0 14px 36px rgba(0,0,0,0.5), 0 30px 65px rgba(0,0,0,0.35);
   }
   .polaroid-caption{
     position:absolute;
@@ -585,11 +594,12 @@
     wrap.className = 'scatter-item is-photo';
     wrap.style.cssText = `left:${p.lp}%;top:${p.tp}px;width:${p.w}px;`;
     const cardClass = p.noBorder ? 'photo-card no-border' : 'photo-card';
+    const faceStyle = `width:${p.w}px;height:${p.h}px;overflow:hidden;position:relative;`;
     wrap.innerHTML = `
       <div class="${cardClass}" style="--tilt:${p.tilt};width:${p.w}px">
-        <div class="face" style="width:${p.w}px;height:${p.h}px;overflow:hidden;position:relative;">
+        <div class="face" style="${faceStyle}">
           <img src="${p.file}" alt="${p.title}" loading="lazy"
-            style="width:100%;height:100%;object-fit:cover;display:block;">
+            style="width:100%;height:100%;object-fit:cover;object-position:center center;display:block;">
         </div>
         <div class="photo-overlay">${p.title}</div>
         ${p.noBorder ? '' : `<div class="polaroid-caption">${p.title}</div>`}
