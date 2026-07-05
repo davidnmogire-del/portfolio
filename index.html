@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Elijah Che Williams — Photography</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23e0121f'/><text y='.9em' font-size='55' x='50%' text-anchor='middle' font-family='serif' fill='%23f3e6c8'>ECW</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
@@ -14,7 +15,8 @@
 
   :root{
     --red:#e0121f;
-    --gold-soft:#eed79a;
+    --red-dark:#b0101a;
+    --gold:#eed79a;
     --cream:#f3e6c8;
     --ink:#1c1310;
   }
@@ -43,50 +45,46 @@
   }
   .navbar .brand{
     font-family:'OutOfAfrica', sans-serif;
-    font-size:0.9rem; letter-spacing:0.15em; text-transform:uppercase;
+    font-size:0.95rem; letter-spacing:0.15em; text-transform:uppercase;
+    cursor:pointer;
   }
-  .navbar nav{ display:flex; gap:2rem; }
+  .navbar nav{ display:flex; gap:2rem; align-items:center; }
   .navbar nav a{
     font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase;
-    opacity:0.85; transition:opacity 0.2s;
+    opacity:0.85; transition:opacity 0.2s; cursor:pointer;
   }
   .navbar nav a:hover{ opacity:1; text-decoration:underline; }
 
-  /* ===== VIEW SWITCH ===== */
+  /* ===== VIEWS ===== */
   .view{ display:none; }
   .view.active{ display:block; }
 
-  /* ===== SCATTER STAGE — absolute positioned ===== */
+  /* ===== STAGE (home scatter) ===== */
   .stage{
     position:relative;
     width:100%;
-    /* height set by JS based on tallest item */
-    margin-top:56px; /* navbar height */
+    margin-top:56px;
   }
 
-  /* Every scatter item */
   .scatter-item{
     position:absolute;
     cursor:pointer;
     opacity:0;
-    transition:opacity 0.7s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    transition:opacity 0.7s ease;
   }
   .scatter-item.visible{ opacity:1; }
 
-  /* ===== PHOTO card (polaroid) ===== */
+  /* ===== PHOTO card ===== */
   .photo-card{
-    background:#f8f4ee;
-    padding:7px 7px 38px;
-    box-shadow:
-      0 3px 8px rgba(0,0,0,0.25),
-      0 14px 35px rgba(0,0,0,0.38);
     position:relative;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35), 0 18px 45px rgba(0,0,0,0.3);
     transform:rotate(var(--tilt));
-    transition:transform 0.25s ease, box-shadow 0.25s ease;
+    transition:transform 0.3s ease, box-shadow 0.3s ease;
+    overflow:hidden;
   }
   .photo-card:hover{
-    transform:rotate(calc(var(--tilt)*0.15)) scale(1.03) translateY(-6px);
-    box-shadow:0 10px 20px rgba(0,0,0,0.3), 0 26px 52px rgba(0,0,0,0.45);
+    transform:rotate(calc(var(--tilt)*0.1)) scale(1.02) translateY(-8px);
+    box-shadow:0 14px 36px rgba(0,0,0,0.45), 0 30px 60px rgba(0,0,0,0.35);
     z-index:50;
   }
   .photo-card img{
@@ -94,118 +92,277 @@
     object-fit:cover;
   }
   /* vignette */
-  .photo-card .face{
-    position:relative; overflow:hidden;
-  }
-  .photo-card .face::after{
+  .photo-card::after{
     content:'';
     position:absolute; inset:0;
-    background:radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.22) 100%);
-    pointer-events:none; z-index:2;
-  }
-  /* polaroid caption strip */
-  .photo-caption{
-    position:absolute; bottom:0; left:7px; right:7px;
-    height:38px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:0.58rem; letter-spacing:0.13em; text-transform:uppercase;
-    color:#6b5d4f; background:#f8f4ee;
-    opacity:0; transition:opacity 0.2s;
-  }
-  .photo-card:hover .photo-caption{ opacity:1; }
-
-  /* ===== TAPE PNGs ===== */
-  .tape{
-    position:absolute;
-    width:100px;
-    z-index:20;
+    background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.18) 100%);
     pointer-events:none;
-    mix-blend-mode:multiply;
-    opacity:0.82;
   }
-  .tape.tl{ top:-13px; left:-18px; }
-  .tape.tr{ top:-13px; right:-18px; transform:scaleX(-1); }
-  .tape.bl{ bottom:-13px; left:-18px; transform:scaleY(-1); }
-  .tape.br{ bottom:-13px; right:-18px; transform:scale(-1); }
+  /* title overlay on hover */
+  .photo-overlay{
+    position:absolute; bottom:0; left:0; right:0;
+    background:linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
+    padding:2rem 1rem 0.8rem;
+    opacity:0; transition:opacity 0.25s;
+    font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:#fff;
+  }
+  .photo-card:hover .photo-overlay{ opacity:1; }
 
-  /* ===== VIDEO card (no tape, no border) ===== */
+  /* ===== VIDEO card ===== */
   .video-card{
     position:relative;
     box-shadow:0 8px 28px rgba(0,0,0,0.5);
     overflow:hidden;
     transform:rotate(var(--tilt));
-    transition:transform 0.25s ease;
+    transition:transform 0.3s ease;
+    background:#000;
   }
   .video-card:hover{
-    transform:rotate(calc(var(--tilt)*0.15)) scale(1.02) translateY(-4px);
+    transform:rotate(calc(var(--tilt)*0.1)) scale(1.02) translateY(-6px);
     z-index:50;
   }
   .video-card video{
     display:block; width:100%;
-    object-fit:cover; background:#000;
+    object-fit:cover;
   }
+  /* sound toggle */
+  .sound-btn{
+    position:absolute; bottom:10px; right:12px;
+    background:rgba(0,0,0,0.5);
+    border:1px solid rgba(255,255,255,0.5);
+    color:#fff; font-size:0.7rem;
+    padding:3px 8px; cursor:pointer;
+    border-radius:2px; letter-spacing:0.08em;
+    z-index:5;
+  }
+
+  /* ===== SERIES VIEW ===== */
+  .series-header{
+    padding:6rem 2.5rem 2rem;
+    display:flex; align-items:center; gap:2rem;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+  }
+  .back-btn{
+    background:none;
+    border:1px solid var(--gold); color:var(--gold);
+    font-family:'Work Sans', sans-serif;
+    font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;
+    padding:0.55rem 1.1rem; cursor:pointer;
+    transition:background 0.2s, color 0.2s; white-space:nowrap;
+  }
+  .back-btn:hover{ background:var(--gold); color:var(--ink); }
+  .series-header h2{ font-size:clamp(1.6rem,4vw,2.4rem); }
+
+  .series-grid{
+    padding:2rem 2.5rem 5rem;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
+    gap:1.8rem;
+  }
+  .series-tile{
+    cursor:pointer;
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 6px 20px rgba(0,0,0,0.35);
+    transition:transform 0.3s, box-shadow 0.3s;
+  }
+  .series-tile:hover{
+    transform:scale(1.02); box-shadow:0 12px 32px rgba(0,0,0,0.5);
+  }
+  .series-tile img{
+    width:100%; height:340px; object-fit:cover; display:block;
+    transition:transform 0.4s;
+  }
+  .series-tile:hover img{ transform:scale(1.05); }
+  .series-tile video{
+    width:100%; height:340px; object-fit:cover; display:block;
+  }
+  .series-tile .tile-label{
+    position:absolute; bottom:0; left:0; right:0;
+    background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+    padding:2rem 1rem 0.7rem;
+    font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:#fff;
+  }
+
+  /* ===== ABOUT / CONTACT VIEW ===== */
+  .about-wrap{
+    padding:8rem 2.5rem 5rem;
+    max-width:820px; margin:0 auto;
+  }
+  .about-wrap h2{
+    font-size:clamp(2rem,5vw,3.5rem);
+    margin-bottom:2rem;
+    line-height:1.1;
+  }
+  .about-wrap p{
+    font-size:1.05rem; line-height:1.75;
+    opacity:0.88; margin-bottom:1.4rem;
+  }
+  .contact-block{
+    margin-top:3rem;
+    padding-top:2rem;
+    border-top:1px solid rgba(255,255,255,0.15);
+  }
+  .contact-block h3{
+    font-size:1.4rem; margin-bottom:1.2rem;
+  }
+  .contact-link{
+    display:inline-block;
+    font-size:0.85rem; letter-spacing:0.12em; text-transform:uppercase;
+    border:1px solid var(--gold); color:var(--gold);
+    padding:0.8rem 1.8rem;
+    transition:background 0.2s, color 0.2s;
+    margin-right:1rem; margin-bottom:1rem;
+  }
+  .contact-link:hover{ background:var(--gold); color:var(--ink); }
 
   /* ===== LIGHTBOX ===== */
   .lightbox{
     position:fixed; inset:0;
-    background:rgba(8,4,2,0.95);
+    background:rgba(8,4,2,0.96);
     display:none; align-items:center; justify-content:center;
     z-index:300; padding:2rem;
   }
   .lightbox.active{ display:flex; }
   .lb-inner{
-    max-width:820px; width:100%; text-align:center;
-    background:#f8f4ee; padding:10px 10px 42px;
-    box-shadow:0 24px 70px rgba(0,0,0,0.7);
+    max-width:900px; width:100%; text-align:center;
     position:relative;
   }
   .lb-inner img{
-    width:100%; max-height:76vh; object-fit:contain; display:block;
+    width:100%; max-height:82vh; object-fit:contain; display:block;
   }
   .lb-title{
-    margin-top:0.6rem;
+    margin-top:0.8rem;
     font-size:0.65rem; letter-spacing:0.16em; text-transform:uppercase;
-    color:#6b5d4f; font-family:'Work Sans', sans-serif;
+    color:rgba(255,255,255,0.5); font-family:'Work Sans', sans-serif;
   }
   .lb-close{
     position:fixed; top:1.8rem; right:1.8rem;
-    background:none; border:1px solid var(--gold-soft); color:var(--gold-soft);
+    background:none; border:1px solid var(--gold); color:var(--gold);
     width:42px; height:42px; border-radius:50%; font-size:1.2rem; cursor:pointer;
     transition:background 0.2s, color 0.2s;
   }
-  .lb-close:hover{ background:var(--gold-soft); color:var(--ink); }
-
-  @media(max-width:768px){
-    .navbar nav{ gap:1rem; }
-    .scatter-item{ position:relative !important; top:auto !important; left:auto !important;
-      width:85vw !important; margin:2rem auto !important; display:block; }
-    .stage{ height:auto !important; display:flex; flex-direction:column; align-items:center; padding-bottom:4rem; }
-    .photo-card, .video-card{ transform:none !important; width:100% !important; }
-    .photo-card img, .video-card video{ height:260px !important; }
+  .lb-close:hover{ background:var(--gold); color:var(--ink); }
+  .lb-nav{
+    position:fixed; top:50%; transform:translateY(-50%);
+    background:none; border:1px solid rgba(255,255,255,0.3); color:#fff;
+    width:44px; height:44px; border-radius:50%; font-size:1.1rem; cursor:pointer;
+    transition:background 0.2s; display:flex; align-items:center; justify-content:center;
   }
+  .lb-nav:hover{ background:rgba(255,255,255,0.15); }
+  .lb-prev{ left:1.5rem; }
+  .lb-next{ right:1.5rem; }
+
+  /* ===== MOBILE ===== */
+  @media(max-width:768px){
+    .navbar{ padding:1rem 1.2rem; }
+    .navbar nav{ gap:0.8rem; }
+    .navbar nav a{ font-size:0.65rem; }
+    .stage{ margin-top:52px; }
+    .scatter-item{
+      position:relative !important;
+      top:auto !important; left:auto !important;
+      width:90vw !important;
+      margin:1.5rem auto !important;
+      display:block;
+    }
+    .stage{
+      height:auto !important;
+      display:flex; flex-direction:column;
+      align-items:center; padding-bottom:4rem;
+    }
+    .photo-card, .video-card{
+      transform:none !important;
+      width:100% !important;
+    }
+    .photo-card img{ height:320px !important; }
+    .video-card video{ height:220px !important; }
+    .series-grid{ grid-template-columns:1fr; padding:1.5rem; }
+    .about-wrap{ padding:6rem 1.5rem 4rem; }
+  }
+
   @media(prefers-reduced-motion:reduce){
-    .scatter-item, .photo-card, .video-card{ transition:none; }
+    .scatter-item, .photo-card, .video-card, .series-tile{ transition:none; }
   }
 </style>
 </head>
 <body>
 
-<!-- HOME -->
+<!-- ===== HOME ===== -->
 <div class="view active" id="view-home">
   <header class="navbar">
-    <div class="brand">Elijah Che Williams</div>
+    <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
     <nav>
-      <a href="#">Images</a>
-      <a href="#">Moving Images</a>
-      <a href="#">A Deeper Look</a>
+      <a onclick="showView('view-images')">Images</a>
+      <a onclick="showView('view-moving')">Moving Images</a>
+      <a onclick="showView('view-about')">A Deeper Look</a>
     </nav>
   </header>
   <div class="stage" id="stage"></div>
 </div>
 
-<!-- LIGHTBOX -->
+<!-- ===== IMAGES (series) ===== -->
+<div class="view" id="view-images">
+  <header class="navbar">
+    <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
+    <nav>
+      <a onclick="showView('view-images')">Images</a>
+      <a onclick="showView('view-moving')">Moving Images</a>
+      <a onclick="showView('view-about')">A Deeper Look</a>
+    </nav>
+  </header>
+  <div class="series-header">
+    <button class="back-btn" onclick="showView('view-home')">← Back</button>
+    <h2>Images</h2>
+  </div>
+  <div class="series-grid" id="images-grid"></div>
+</div>
+
+<!-- ===== MOVING IMAGES ===== -->
+<div class="view" id="view-moving">
+  <header class="navbar">
+    <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
+    <nav>
+      <a onclick="showView('view-images')">Images</a>
+      <a onclick="showView('view-moving')">Moving Images</a>
+      <a onclick="showView('view-about')">A Deeper Look</a>
+    </nav>
+  </header>
+  <div class="series-header">
+    <button class="back-btn" onclick="showView('view-home')">← Back</button>
+    <h2>Moving Images</h2>
+  </div>
+  <div class="series-grid" id="moving-grid"></div>
+</div>
+
+<!-- ===== ABOUT ===== -->
+<div class="view" id="view-about">
+  <header class="navbar">
+    <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
+    <nav>
+      <a onclick="showView('view-images')">Images</a>
+      <a onclick="showView('view-moving')">Moving Images</a>
+      <a onclick="showView('view-about')">A Deeper Look</a>
+    </nav>
+  </header>
+  <div class="about-wrap">
+    <h2>A Deeper Look</h2>
+    <p>Elijah Che Williams is a photographer and visual artist whose work explores identity, stillness, and the charged spaces between people and place. Shooting on both digital and film, his images sit at the intersection of documentary impulse and fashion editorial — street-found and studio-composed, raw and deliberate.</p>
+    <p>Based in the American South, his work draws from the textures of everyday environments — peeling walls, open fields, winter light — and the people who move through them with grace.</p>
+    <div class="contact-block">
+      <h3>Get in Touch</h3>
+      <a class="contact-link" href="mailto:hello@elijahchewilliams.com">Email</a>
+      <a class="contact-link" href="https://instagram.com" target="_blank">Instagram</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LIGHTBOX ===== -->
 <div class="lightbox" id="lightbox">
   <button class="lb-close" id="lb-close">✕</button>
+  <button class="lb-nav lb-prev" id="lb-prev">‹</button>
+  <button class="lb-nav lb-next" id="lb-next">›</button>
   <div class="lb-inner">
     <img id="lb-img" src="" alt="">
     <p class="lb-title" id="lb-title"></p>
@@ -213,182 +370,132 @@
 </div>
 
 <script>
-  const TA = 'tape-png-44308.png';
-  const TB = 'tape-png-44311.png';
-
-  /* Each item has:
-     type: photo | video
-     file: filename
-     title: caption
-     w: width in px
-     h: height of the image/video face
-     lp: left % of stage
-     tp: top px from stage top
-     tilt: rotation
-     t1/t1p and t2/t2p: tape png + corner (photos only) */
-  const items = [
-    // ── ROW 1 ──────────────────────────────────────────
-    {
-      type:'photo', file:'IMG_7441.jpeg', title:'Stillness',
-      w:270, h:400, lp:3, tp:60,
-      tilt:'-3deg', t1:TA, t1p:'tl', t2:TB, t2p:'br'
-    },
-    {
-      type:'video', file:'HAIR.MP4', title:'Hair',
-      w:460, h:270, lp:27, tp:30,
-      tilt:'1deg'
-    },
-    {
-      type:'photo', file:'IMG_8381.jpeg', title:'Blue',
-      w:255, h:390, lp:72, tp:50,
-      tilt:'2.2deg', t1:TB, t1p:'tr', t2:TA, t2p:'bl'
-    },
-    // ── ROW 2 ──────────────────────────────────────────
-    {
-      type:'photo', file:'IMG_4776.jpeg', title:'Sisters',
-      w:370, h:248, lp:6, tp:540,
-      tilt:'-1.8deg', t1:TA, t1p:'tl', t2:TB, t2p:'br'
-    },
-    {
-      type:'photo', file:'IMG_8555.jpeg', title:'Dusk Prayer',
-      w:360, h:240, lp:40, tp:480,
-      tilt:'2.5deg', t1:TB, t1p:'tr', t2:TA, t2p:'bl'
-    },
-    {
-      type:'photo', file:'IMG_9195.jpeg', title:'The Wall',
-      w:235, h:355, lp:73, tp:510,
-      tilt:'-2.8deg', t1:TA, t1p:'tl', t2:TB, t2p:'br'
-    },
-    // ── ROW 3 ──────────────────────────────────────────
-    {
-      type:'photo', file:'IMG_5498.jpeg', title:'Bond',
-      w:255, h:385, lp:4, tp:950,
-      tilt:'3deg', t1:TB, t1p:'tr', t2:TA, t2p:'bl'
-    },
-    {
-      type:'video', file:'Gap 3.mp4', title:'Gap',
-      w:445, h:260, lp:27, tp:880,
-      tilt:'-1.5deg'
-    },
-    {
-      type:'photo', file:'IMG_7617.jpeg', title:'Purple House',
-      w:250, h:380, lp:72, tp:920,
-      tilt:'1.8deg', t1:TA, t1p:'tl', t2:TB, t2p:'br'
-    },
-    // ── ROW 4 ──────────────────────────────────────────
-    {
-      type:'photo', file:'IMG_7069.jpeg', title:'Night Wall',
-      w:375, h:252, lp:5, tp:1400,
-      tilt:'-2.3deg', t1:TB, t1p:'tr', t2:TA, t2p:'bl'
-    },
-    {
-      type:'photo', file:'IMG_7006.jpeg', title:'Flower',
-      w:355, h:238, lp:35, tp:1340,
-      tilt:'1.6deg', t1:TA, t1p:'tl', t2:TB, t2p:'br'
-    },
-    {
-      type:'photo', file:'IMG_0020.jpeg', title:'Open',
-      w:365, h:245, lp:65, tp:1380,
-      tilt:'-1.2deg', t1:TB, t1p:'tr', t2:TA, t2p:'bl'
-    },
-    // ── ROW 5 ──────────────────────────────────────────
-    {
-      type:'photo', file:'IMG_6595.jpeg', title:'Yellow Dress',
-      w:252, h:378, lp:4, tp:1760,
-      tilt:'2.7deg', t1:TA, t1p:'tl', t2:TB, t2p:'br'
-    },
-    {
-      type:'video', file:'Bam.mp4', title:'Bam',
-      w:440, h:258, lp:27, tp:1700,
-      tilt:'1.2deg'
-    },
-    {
-      type:'photo', file:'IMG_8762.jpeg', title:'Yellow',
-      w:248, h:372, lp:72, tp:1730,
-      tilt:'-3.2deg', t1:TB, t1p:'tr', t2:TA, t2p:'bl'
-    },
-    // ── ROW 6 ──────────────────────────────────────────
-    {
-      type:'photo', file:'IMG_9233.jpeg', title:'Bedroom',
-      w:370, h:250, lp:6, tp:2210,
-      tilt:'-2deg', t1:TA, t1p:'tl', t2:TB, t2p:'br'
-    },
-    {
-      type:'photo', file:'Screenshot 2026-07-05 103457.png', title:'Laughter',
-      w:358, h:258, lp:45, tp:2160,
-      tilt:'1.4deg', t1:TB, t1p:'tr', t2:TA, t2p:'bl'
-    },
+  /* ── DATA ── */
+  const photos = [
+    { file:'IMG_7441.jpeg',  title:'Stillness',     lp:3,  tp:70,  w:320, h:480, tilt:'-3deg'  },
+    { file:'IMG_8381.jpeg',  title:'Blue',          lp:73, tp:55,  w:310, h:470, tilt:'2.2deg' },
+    { file:'IMG_4776.jpeg',  title:'Sisters',       lp:7,  tp:620, w:450, h:300, tilt:'-1.8deg'},
+    { file:'IMG_8555.jpeg',  title:'Dusk Prayer',   lp:42, tp:560, w:440, h:295, tilt:'2.5deg' },
+    { file:'IMG_9195.jpeg',  title:'The Wall',      lp:74, tp:590, w:280, h:425, tilt:'-2.8deg'},
+    { file:'IMG_5498.jpeg',  title:'Bond',          lp:3,  tp:1070,w:305, h:460, tilt:'3deg'   },
+    { file:'IMG_7617.jpeg',  title:'Purple House',  lp:73, tp:1040,w:295, h:445, tilt:'1.8deg' },
+    { file:'IMG_7069.jpeg',  title:'Night Wall',    lp:5,  tp:1600,w:450, h:302, tilt:'-2.3deg'},
+    { file:'IMG_7006.jpeg',  title:'Flower',        lp:36, tp:1540,w:430, h:288, tilt:'1.6deg' },
+    { file:'IMG_0020.jpeg',  title:'Open',          lp:66, tp:1570,w:445, h:298, tilt:'-1.2deg'},
+    { file:'IMG_6595.jpeg',  title:'Yellow Dress',  lp:3,  tp:2010,w:305, h:455, tilt:'2.7deg' },
+    { file:'IMG_8762.jpeg',  title:'Yellow',        lp:73, tp:1980,w:290, h:435, tilt:'-3.2deg'},
+    { file:'IMG_9233.jpeg',  title:'Bedroom',       lp:6,  tp:2550,w:445, h:298, tilt:'-2deg'  },
+    { file:'Screenshot 2026-07-05 103457.png', title:'Laughter', lp:44, tp:2490, w:430, h:310, tilt:'1.4deg'},
   ];
 
-  const stage = document.getElementById('stage');
-  const lightbox = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lb-img');
-  const lbTitle = document.getElementById('lb-title');
-  const lbClose = document.getElementById('lb-close');
+  const videos = [
+    { file:'HAIR.MP4',    title:'Hair', lp:27, tp:35,   w:560, h:320, tilt:'1deg'  },
+    { file:'Gap 3.mp4',   title:'Gap',  lp:27, tp:990,  w:545, h:310, tilt:'-1.5deg'},
+    { file:'Bam.mp4',     title:'Bam',  lp:27, tp:1920, w:540, h:308, tilt:'1.2deg' },
+  ];
 
-  /* Build stage items */
-  items.forEach(item => {
+  /* ── LIGHTBOX STATE ── */
+  let lbIndex = 0;
+  const lbImg   = document.getElementById('lb-img');
+  const lbTitle = document.getElementById('lb-title');
+  const lightbox= document.getElementById('lightbox');
+
+  function openLightbox(idx){
+    lbIndex = idx;
+    lbImg.src = photos[idx].file;
+    lbImg.alt = photos[idx].title;
+    lbTitle.textContent = photos[idx].title;
+    lightbox.classList.add('active');
+  }
+  document.getElementById('lb-prev').onclick = ()=> openLightbox((lbIndex - 1 + photos.length) % photos.length);
+  document.getElementById('lb-next').onclick = ()=> openLightbox((lbIndex + 1) % photos.length);
+  document.getElementById('lb-close').onclick = ()=> lightbox.classList.remove('active');
+  lightbox.addEventListener('click', e=>{ if(e.target===lightbox) lightbox.classList.remove('active'); });
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape') lightbox.classList.remove('active');
+    if(e.key==='ArrowRight') openLightbox((lbIndex+1)%photos.length);
+    if(e.key==='ArrowLeft') openLightbox((lbIndex-1+photos.length)%photos.length);
+  });
+
+  /* ── BUILD STAGE ── */
+  const stage = document.getElementById('stage');
+
+  photos.forEach((p, i)=>{
     const wrap = document.createElement('div');
     wrap.className = 'scatter-item';
-    wrap.style.left = item.lp + '%';
-    wrap.style.top  = item.tp + 'px';
-    wrap.style.width = item.w + 'px';
-
-    if(item.type === 'photo'){
-      wrap.innerHTML = `
-        <div class="photo-card" style="--tilt:${item.tilt}">
-          <div class="face" style="width:${item.w}px;height:${item.h}px">
-            <img src="${item.file}" alt="${item.title}" loading="lazy" style="width:${item.w}px;height:${item.h}px">
-          </div>
-          <img class="tape ${item.t1p}" src="${item.t1}" alt="">
-          <img class="tape ${item.t2p}" src="${item.t2}" alt="">
-          <div class="photo-caption">${item.title}</div>
-        </div>
-      `;
-      wrap.addEventListener('click', ()=>{
-        lbImg.src = item.file;
-        lbImg.alt = item.title;
-        lbTitle.textContent = item.title;
-        lightbox.classList.add('active');
-      });
-    } else {
-      wrap.innerHTML = `
-        <div class="video-card" style="--tilt:${item.tilt}; width:${item.w}px">
-          <video src="${item.file}" style="height:${item.h}px"
-            muted loop playsinline preload="metadata"
-            onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0">
-          </video>
-        </div>
-      `;
-    }
-
+    wrap.style.cssText = `left:${p.lp}%;top:${p.tp}px;width:${p.w}px;`;
+    wrap.innerHTML = `
+      <div class="photo-card" style="--tilt:${p.tilt};width:${p.w}px">
+        <img src="${p.file}" alt="${p.title}" loading="lazy" style="width:${p.w}px;height:${p.h}px">
+        <div class="photo-overlay">${p.title}</div>
+      </div>`;
+    wrap.addEventListener('click', ()=> openLightbox(i));
     stage.appendChild(wrap);
   });
 
-  /* Set stage height to fit all content */
-  function setStageHeight(){
-    let maxBottom = 0;
-    document.querySelectorAll('.scatter-item').forEach(el => {
-      const top = parseInt(el.style.top);
-      const h = el.offsetHeight;
-      if(top + h > maxBottom) maxBottom = top + h;
-    });
-    stage.style.height = (maxBottom + 160) + 'px';
+  videos.forEach(v=>{
+    const wrap = document.createElement('div');
+    wrap.className = 'scatter-item';
+    wrap.style.cssText = `left:${v.lp}%;top:${v.tp}px;width:${v.w}px;`;
+    const muted = v.muted !== false;
+    wrap.innerHTML = `
+      <div class="video-card" style="--tilt:${v.tilt};width:${v.w}px">
+        <video src="${v.file}" style="height:${v.h}px"
+          autoplay muted loop playsinline preload="auto" id="vid-${v.title}">
+        </video>
+        <button class="sound-btn" onclick="toggleSound(this, 'vid-${v.title}')">🔇 Sound</button>
+      </div>`;
+    stage.appendChild(wrap);
+  });
+
+  function toggleSound(btn, id){
+    const vid = document.getElementById(id);
+    vid.muted = !vid.muted;
+    btn.textContent = vid.muted ? '🔇 Sound' : '🔊 Mute';
   }
 
-  /* Staggered reveal on load */
+  /* ── STAGE HEIGHT ── */
   window.addEventListener('load', ()=>{
-    setStageHeight();
-    const els = document.querySelectorAll('.scatter-item');
-    els.forEach((el, i)=>{
-      setTimeout(()=> el.classList.add('visible'), i * 80);
+    let max = 0;
+    document.querySelectorAll('.scatter-item').forEach(el=>{
+      const b = parseInt(el.style.top) + el.offsetHeight;
+      if(b > max) max = b;
+    });
+    stage.style.height = (max + 200) + 'px';
+    // staggered reveal
+    document.querySelectorAll('.scatter-item').forEach((el,i)=>{
+      setTimeout(()=> el.classList.add('visible'), i * 70);
     });
   });
 
-  /* Lightbox close */
-  lbClose.addEventListener('click', ()=> lightbox.classList.remove('active'));
-  lightbox.addEventListener('click', e=>{ if(e.target===lightbox) lightbox.classList.remove('active'); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') lightbox.classList.remove('active'); });
+  /* ── SERIES PAGES ── */
+  const imagesGrid = document.getElementById('images-grid');
+  photos.forEach((p, i)=>{
+    const tile = document.createElement('div');
+    tile.className = 'series-tile';
+    tile.innerHTML = `
+      <img src="${p.file}" alt="${p.title}" loading="lazy">
+      <div class="tile-label">${p.title}</div>`;
+    tile.addEventListener('click', ()=> openLightbox(i));
+    imagesGrid.appendChild(tile);
+  });
+
+  const movingGrid = document.getElementById('moving-grid');
+  videos.forEach(v=>{
+    const tile = document.createElement('div');
+    tile.className = 'series-tile';
+    tile.innerHTML = `
+      <video src="${v.file}" autoplay muted loop playsinline preload="auto"></video>
+      <div class="tile-label">${v.title}</div>`;
+    movingGrid.appendChild(tile);
+  });
+
+  /* ── VIEW SWITCH ── */
+  function showView(id){
+    document.querySelectorAll('.view').forEach(v=> v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({top:0, behavior:'instant'});
+  }
 </script>
 </body>
 </html>
