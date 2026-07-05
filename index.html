@@ -3,259 +3,154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Frame & Found — Photography</title>
+<title>Elijah Che Williams — Photography</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
   @font-face{
-    font-family: 'OutOfAfrica';
-    src: url('OutOfAfrica.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+    font-family:'OutOfAfrica';
+    src:url('OutOfAfrica.ttf') format('truetype');
   }
 
   :root{
-    --red: #e0121f;
-    --gold-soft: #eed79a;
-    --cream: #f3e6c8;
-    --ink: #1c1310;
+    --red:#e0121f;
+    --gold-soft:#eed79a;
+    --cream:#f3e6c8;
+    --ink:#1c1310;
   }
 
-  *{ box-sizing:border-box; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
   html{ scroll-behavior:smooth; }
 
   body{
-    margin:0;
-    background: var(--red);
-    /* subtle noise grain over the red */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    color: var(--cream);
+    background:var(--red);
+    color:var(--cream);
     font-family:'Work Sans', sans-serif;
     overflow-x:hidden;
     min-height:100vh;
   }
 
-  h1,h2,h3,.display{
-    font-family:'OutOfAfrica', sans-serif;
-    font-weight:400;
-    letter-spacing:0.04em;
-  }
+  h1,h2,h3{ font-family:'OutOfAfrica', sans-serif; font-weight:400; letter-spacing:0.03em; }
   a{ color:inherit; text-decoration:none; }
 
   /* ===== NAV ===== */
   .navbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding: 1.4rem 2.5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-    position:relative;
-    z-index:10;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1.4rem 2.5rem;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+    position:relative; z-index:20;
   }
   .navbar .brand{
     font-family:'OutOfAfrica', sans-serif;
-    font-size:1rem;
-    letter-spacing:0.15em;
-    text-transform:uppercase;
+    font-size:1rem; letter-spacing:0.15em; text-transform:uppercase;
   }
-  .navbar nav{ display:flex; gap: 2.2rem; }
+  .navbar nav{ display:flex; gap:2.2rem; }
   .navbar nav a{
-    font-size:0.78rem;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    opacity:0.85;
-    transition: opacity 0.2s;
+    font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase;
+    opacity:0.85; transition:opacity 0.2s;
   }
   .navbar nav a:hover{ opacity:1; text-decoration:underline; }
 
-  /* ===== VIEW SWITCHING ===== */
+  /* ===== VIEW SWITCH ===== */
   .view{ display:none; }
   .view.active{ display:block; }
 
-  /* ===== SCATTER GRID ===== */
+  /* ===== SCATTER CONTAINER ===== */
+  /* Using CSS columns for a natural, uneven masonry scatter */
   .scatter-wrap{
-    max-width: 1700px;
-    margin: 0 auto;
-    padding: 5rem 3rem 8rem;
-  }
-  .scatter-grid{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:flex-start;
-    justify-content:center;
-    gap: 4rem 5rem;
+    padding:4rem 3rem 8rem;
+    column-count:3;
+    column-gap:3rem;
+    max-width:1600px;
+    margin:0 auto;
   }
 
-  /* Each scatter item is a "printed photo" with a white border like a real print */
+  /* Each item breaks column flow naturally */
   .scatter-item{
+    break-inside:avoid;
+    display:block;
     position:relative;
-    cursor:pointer;
+    margin-bottom:var(--gap);
     opacity:0;
-    transform: translateY(28px) rotate(var(--tilt, 0deg));
-    transition: opacity 0.65s ease, transform 0.65s ease, box-shadow 0.3s ease;
-    /* white photo border like a real photographic print */
-    background: #f8f4ee;
-    padding: 8px 8px 32px; /* extra bottom pad = polaroid caption space */
-    box-shadow:
-      0 4px 6px rgba(0,0,0,0.18),
-      0 12px 28px rgba(0,0,0,0.28),
-      0 2px 0 rgba(255,255,255,0.08) inset;
+    transform:rotate(var(--tilt)) translateY(20px);
+    transition:opacity 0.6s ease, transform 0.6s ease, box-shadow 0.25s ease;
+    cursor:pointer;
   }
   .scatter-item.in-view{
     opacity:1;
-    transform: rotate(var(--tilt, 0deg)) translateY(0);
+    transform:rotate(var(--tilt)) translateY(0);
   }
   .scatter-item:hover{
-    box-shadow:
-      0 8px 12px rgba(0,0,0,0.22),
-      0 20px 40px rgba(0,0,0,0.35);
-    z-index:5;
-    transform: rotate(calc(var(--tilt, 0deg) * 0.4)) translateY(-6px) scale(1.02);
+    z-index:10;
+    transform:rotate(calc(var(--tilt)*0.2)) translateY(-6px) scale(1.02) !important;
   }
 
-  /* The actual photo area inside the print border */
-  .photo-face{
-    width:100%; height:100%;
-    position:relative;
-    overflow:hidden;
-  }
-
-  /* Simulated photo — rich gradient tones to look like real photography */
-  .photo-face .sim{
-    position:absolute; inset:0;
-  }
-  /* grain overlay on each photo */
-  .photo-face::after{
-    content:'';
-    position:absolute; inset:0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
-    pointer-events:none;
-    z-index:2;
-  }
-  /* vignette */
-  .photo-face::before{
-    content:'';
-    position:absolute; inset:0;
-    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.32) 100%);
-    pointer-events:none;
-    z-index:3;
-  }
-
-  /* Caption strip at bottom of polaroid */
-  .polaroid-caption{
-    position:absolute;
-    bottom:0; left:8px; right:8px;
-    height:32px;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Work Sans', sans-serif;
-    font-size:0.65rem;
-    letter-spacing:0.1em;
-    color:#6b5d4f;
-    text-transform:uppercase;
-    opacity:0;
-    transition: opacity 0.25s ease;
+  /* ===== PHOTO CARD (polaroid border) ===== */
+  .photo-card{
     background:#f8f4ee;
+    padding:8px 8px 40px;
+    box-shadow:
+      0 3px 6px rgba(0,0,0,0.22),
+      0 12px 30px rgba(0,0,0,0.35);
+    position:relative;
   }
-  .scatter-item:hover .polaroid-caption{ opacity:1; }
-
-  /* size classes — just the photo face area */
-  .size-sm .photo-face{ width:220px; height:320px; }
-  .size-md .photo-face{ width:320px; height:215px; }
-  .size-lg .photo-face{ width:400px; height:400px; }
-  .size-tall .photo-face{ width:260px; height:380px; }
-  .size-wide .photo-face{ width:380px; height:250px; }
-
-  /* vertical offset per item to create staggered placement */
-  .offset-0{ margin-top: 0; }
-  .offset-1{ margin-top: 5rem; }
-  .offset-2{ margin-top: -2rem; }
-  .offset-3{ margin-top: 8rem; }
-  .offset-4{ margin-top: 2rem; }
-  .offset-5{ margin-top: 11rem; }
-
-  /* video badge */
-  .scatter-item.is-video .play-ring{
+  .photo-card img{
+    width:100%; display:block;
+    object-fit:cover;
+  }
+  /* Vignette */
+  .photo-card::after{
+    content:'';
     position:absolute;
-    top:50%; left:50%;
-    transform:translate(-50%,-50%);
-    width:56px; height:56px;
-    border-radius:50%;
-    background: rgba(0,0,0,0.38);
-    border: 1.5px solid rgba(255,255,255,0.75);
-    display:flex; align-items:center; justify-content:center;
-    font-size:1.3rem;
-    z-index:4;
-    color:#fff;
+    top:8px; left:8px; right:8px;
+    bottom:40px;
+    background:radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.25) 100%);
+    pointer-events:none; z-index:2;
   }
+  /* Caption on hover */
+  .photo-caption{
+    position:absolute; bottom:0; left:8px; right:8px;
+    height:40px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:#6b5d4f; background:#f8f4ee;
+    opacity:0; transition:opacity 0.2s;
+  }
+  .scatter-item:hover .photo-caption{ opacity:1; }
 
-  /* ===== REALISTIC TAPE ===== */
-  /* Tape is a slightly translucent, off-white strip with torn-ish edges
-     achieved via clip-path serrations and a warm tint */
+  /* ===== TAPE PNGs — on photos only ===== */
   .tape{
     position:absolute;
+    width:100px;
     z-index:10;
     pointer-events:none;
+    mix-blend-mode:multiply;
+    opacity:0.85;
   }
-  .tape::before{
-    content:'';
-    position:absolute; inset:0;
-    /* realistic tape: warm translucent beige with horizontal lines suggesting tape grain */
-    background:
-      repeating-linear-gradient(
-        0deg,
-        rgba(255,255,255,0.04) 0px,
-        rgba(255,255,255,0.04) 1px,
-        transparent 1px,
-        transparent 3px
-      ),
-      rgba(230, 215, 180, 0.68);
-    /* slightly serrated/torn edge via clip-path */
-    clip-path: polygon(
-      0% 15%, 4% 0%, 8% 18%, 12% 2%, 16% 20%,
-      20% 0%, 24% 18%, 28% 4%, 32% 22%, 36% 2%,
-      40% 20%, 44% 0%, 48% 18%, 52% 4%, 56% 22%,
-      60% 0%, 64% 18%, 68% 2%, 72% 20%, 76% 0%,
-      80% 18%, 84% 4%, 88% 22%, 92% 2%, 96% 20%,
-      100% 0%, 100% 80%, 96% 100%, 92% 82%, 88% 98%,
-      84% 80%, 80% 100%, 76% 82%, 72% 98%, 68% 80%,
-      64% 100%, 60% 82%, 56% 98%, 52% 80%, 48% 100%,
-      44% 82%, 40% 98%, 36% 80%, 32% 100%, 28% 82%,
-      24% 98%, 20% 80%, 16% 100%, 12% 82%, 8% 98%,
-      4% 80%, 0% 100%
-    );
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  }
+  /* Opposite corner pairs — each photo gets tl+br or tr+bl */
+  .tape.tl{ top:-13px; left:-18px; }
+  .tape.tr{ top:-13px; right:-18px; transform:scaleX(-1); }
+  .tape.bl{ bottom:-13px; left:-18px; transform:scaleY(-1); }
+  .tape.br{ bottom:-13px; right:-18px; transform:scale(-1); }
 
-  .tape.pos-tl{
-    width:90px; height:28px;
-    top:-14px; left:-18px;
-    transform: rotate(-42deg);
+  /* ===== VIDEO CARD (no tape, no border, raw) ===== */
+  .video-card{
+    position:relative;
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+    overflow:hidden;
   }
-  .tape.pos-tr{
-    width:90px; height:28px;
-    top:-14px; right:-18px;
-    transform: rotate(42deg);
+  .video-card video{
+    width:100%; display:block;
+    object-fit:cover;
   }
-  .tape.pos-bl{
-    width:90px; height:28px;
-    bottom:-14px; left:-18px;
-    transform: rotate(42deg);
+  .video-label{
+    position:absolute; bottom:0; left:0; right:0;
+    background:linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    padding:1rem 0.8rem 0.5rem;
+    font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--gold-soft); opacity:0; transition:opacity 0.2s;
   }
-  .tape.pos-br{
-    width:90px; height:28px;
-    bottom:-14px; right:-18px;
-    transform: rotate(-42deg);
-  }
-  .tape.pos-top{
-    width:80px; height:26px;
-    top:-12px; left:50%;
-    transform: translateX(-50%) rotate(-6deg);
-  }
-  .tape.pos-midleft{
-    width:80px; height:26px;
-    top:50%; left:-14px;
-    transform: translateY(-50%) rotate(90deg);
-  }
+  .scatter-item:hover .video-label{ opacity:1; }
 
   /* ===== OVERVIEW ===== */
   .overview-header{
@@ -266,12 +161,11 @@
   }
   .back-btn{
     background:none;
-    border:1px solid var(--gold-soft);
-    color:var(--gold-soft);
+    border:1px solid var(--gold-soft); color:var(--gold-soft);
     font-family:'Work Sans', sans-serif;
     font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase;
     padding:0.6rem 1.2rem; cursor:pointer;
-    transition: background 0.2s, color 0.2s;
+    transition:background 0.2s, color 0.2s;
   }
   .back-btn:hover{ background:var(--gold-soft); color:var(--ink); }
   .overview-header h2{ font-size:clamp(1.8rem,4vw,2.6rem); margin:0; }
@@ -280,298 +174,273 @@
     max-width:1100px; margin:0 auto;
     padding:1rem 1.5rem 6rem;
     display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
-    gap:1.4rem;
+    grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+    gap:1.6rem;
   }
-  .photo-tile{
-    position:relative; height:200px; cursor:pointer;
-    background:#f8f4ee;
-    padding:6px 6px 6px;
+  .grid-photo{
+    background:#f8f4ee; padding:6px;
     box-shadow:0 6px 18px rgba(0,0,0,0.3);
-    transition: transform 0.3s, box-shadow 0.3s;
+    cursor:pointer;
+    transition:transform 0.3s, box-shadow 0.3s;
+    position:relative;
   }
-  .photo-tile:hover{ transform: scale(1.03); box-shadow:0 10px 28px rgba(0,0,0,0.4); }
-  .photo-tile .tile-inner{ position:absolute; inset:6px; overflow:hidden; }
-  .photo-tile .frame-bg{
-    position:absolute; inset:0;
-    filter:sepia(0.2) contrast(1.05);
-    transition:transform 0.4s ease;
+  .grid-photo:hover{ transform:scale(1.03); box-shadow:0 10px 28px rgba(0,0,0,0.42); }
+  .grid-photo img{
+    width:100%; height:240px; object-fit:cover; display:block;
+    transition:transform 0.4s;
   }
-  .photo-tile:hover .frame-bg{ transform:scale(1.06); }
-  .photo-tile .label{
+  .grid-photo:hover img{ transform:scale(1.06); }
+  .grid-label{
     position:absolute; bottom:0; left:0; right:0;
-    background:linear-gradient(to top, rgba(28,19,16,0.9), transparent);
-    padding:0.8rem; font-size:0.85rem; z-index:2;
+    padding:1rem 0.7rem 0.4rem;
+    background:linear-gradient(to top,rgba(28,19,16,0.85),transparent);
+    font-size:0.78rem; color:var(--cream);
   }
 
   /* ===== LIGHTBOX ===== */
   .lightbox{
     position:fixed; inset:0;
-    background:rgba(10,5,3,0.92);
+    background:rgba(8,4,2,0.95);
     display:none; align-items:center; justify-content:center;
     z-index:200; padding:2rem;
   }
   .lightbox.active{ display:flex; }
   .lightbox-inner{
-    max-width:680px; width:100%; text-align:center;
-    background:#f8f4ee;
-    padding:10px 10px 40px;
-    box-shadow:0 20px 60px rgba(0,0,0,0.6);
-    position:relative;
+    max-width:780px; width:100%; text-align:center;
+    background:#f8f4ee; padding:10px 10px 42px;
+    box-shadow:0 22px 65px rgba(0,0,0,0.65);
   }
-  .lightbox .frame-bg{
-    width:100%; height:55vh; max-height:480px;
-    filter:sepia(0.2) contrast(1.05);
+  .lb-img{ width:100%; max-height:74vh; object-fit:contain; display:block; }
+  .lb-title{
+    margin-top:0.6rem;
+    font-size:0.68rem; letter-spacing:0.16em; text-transform:uppercase;
+    color:#6b5d4f; font-family:'Work Sans', sans-serif;
   }
-  .lightbox .lb-title{
-    margin:0.6rem 0 0;
-    font-family:'Work Sans',sans-serif;
-    font-size:0.75rem;
-    letter-spacing:0.15em;
-    text-transform:uppercase;
-    color:#6b5d4f;
-  }
-  .lightbox .lb-close{
+  .lb-close{
     position:fixed; top:2rem; right:2rem;
     background:none; border:1px solid var(--gold-soft); color:var(--gold-soft);
     width:42px; height:42px; border-radius:50%; font-size:1.2rem; cursor:pointer;
     transition:background 0.2s, color 0.2s;
   }
-  .lightbox .lb-close:hover{ background:var(--gold-soft); color:var(--ink); }
+  .lb-close:hover{ background:var(--gold-soft); color:var(--ink); }
 
-  @media (max-width:720px){
+  @media(max-width:900px){
+    .scatter-wrap{ column-count:2; padding:3rem 1.5rem 6rem; }
+  }
+  @media(max-width:560px){
+    .scatter-wrap{ column-count:1; }
     .navbar{ flex-direction:column; gap:1rem; align-items:flex-start; }
     .navbar nav{ gap:1.2rem; flex-wrap:wrap; }
-    .scatter-item{ --tilt:0deg !important; }
-    .size-sm .photo-face,
-    .size-md .photo-face,
-    .size-lg .photo-face,
-    .size-tall .photo-face,
-    .size-wide .photo-face{ width:78vw; height:260px; }
-    .offset-1,.offset-2,.offset-3,.offset-4,.offset-5{ margin-top:0; }
   }
-  @media (prefers-reduced-motion:reduce){
+  @media(prefers-reduced-motion:reduce){
     .scatter-item{ transition:none; }
   }
 </style>
 </head>
 <body>
 
+<!-- HOME -->
 <div class="view active" id="view-home">
   <header class="navbar">
     <div class="brand">Elijah Che Williams</div>
     <nav>
-      <a href="#" data-link="images">Images</a>
-      <a href="#" data-link="moving">Moving Images</a>
-      <a href="#" data-link="deeper">A Deeper Look</a>
+      <a href="#">Images</a>
+      <a href="#">Moving Images</a>
+      <a href="#">A Deeper Look</a>
     </nav>
   </header>
-
-  <div class="scatter-wrap">
-    <div class="scatter-grid" id="scatter-grid"></div>
-  </div>
+  <div class="scatter-wrap" id="scatter-wrap"></div>
 </div>
 
+<!-- OVERVIEW (single photo clicked) -->
 <div class="view" id="view-overview">
   <div class="overview-header">
     <button class="back-btn" id="back-btn">← Back</button>
-    <h2 id="overview-title">Series</h2>
+    <h2 id="overview-title"></h2>
   </div>
   <div class="photo-grid" id="photo-grid"></div>
 </div>
 
+<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <button class="lb-close" id="lb-close">✕</button>
   <div class="lightbox-inner">
-    <div class="frame-bg" id="lb-frame"></div>
+    <img class="lb-img" id="lb-img" src="" alt="">
     <p class="lb-title" id="lb-title"></p>
   </div>
 </div>
 
 <script>
-  /* Photo simulation palettes — each "photo" has its own gradient
-     mimicking a real photographic scene's tonal range */
-  const palettes = [
-    // warm pink/mauve wall scene
-    'linear-gradient(160deg, #c9a0a0 0%, #8b5e6a 30%, #4a3040 65%, #2c1e2a 100%)',
-    // deep blue wall night scene
-    'linear-gradient(175deg, #1a2a5e 0%, #1e3a8a 25%, #0d1b4a 60%, #060e2a 100%)',
-    // cool overcast sky / blue tones
-    'linear-gradient(150deg, #b8cce0 0%, #7a9db8 30%, #4a6e8a 65%, #2c4055 100%)',
-    // golden field / warm dusk
-    'linear-gradient(165deg, #d4a857 0%, #b8834a 25%, #8c5e32 55%, #4a3018 100%)',
-    // pale sky with figure
-    'linear-gradient(170deg, #c8d8e8 0%, #9ab4c8 30%, #6888a0 60%, #3a5068 100%)',
-    // bare trees / dark winter
-    'linear-gradient(155deg, #3a3228 0%, #5a4e3a 25%, #2a2218 60%, #0e0c08 100%)',
+  const TA = 'tape-png-44308.png';
+  const TB = 'tape-png-44311.png';
+
+  /* Every single photo and video — all go on the main page */
+  const allItems = [
+    // ---- PHOTOS (get 2 tapes, polaroid border) ----
+    {
+      type:'photo', file:'IMG_7441.jpeg', title:'Stillness',
+      tilt:'-3.2deg', gap:'3.5rem',
+      t1:TA, t1p:'tl', t2:TB, t2p:'br',
+    },
+    {
+      type:'photo', file:'IMG_8381.jpeg', title:'Blue',
+      tilt:'2.1deg', gap:'5rem',
+      t1:TB, t1p:'tr', t2:TA, t2p:'bl',
+    },
+    {
+      type:'photo', file:'IMG_8555.jpeg', title:'Dusk Prayer',
+      tilt:'-1.4deg', gap:'2.8rem',
+      t1:TA, t1p:'tl', t2:TB, t2p:'br',
+    },
+    {
+      type:'photo', file:'IMG_5498.jpeg', title:'Bond',
+      tilt:'2.8deg', gap:'4.2rem',
+      t1:TB, t1p:'tr', t2:TA, t2p:'bl',
+    },
+    {
+      type:'photo', file:'IMG_4776.jpeg', title:'Sisters',
+      tilt:'-2.5deg', gap:'3.1rem',
+      t1:TA, t1p:'tl', t2:TB, t2p:'br',
+    },
+    {
+      type:'photo', file:'IMG_8762.jpeg', title:'Yellow',
+      tilt:'1.7deg', gap:'5.5rem',
+      t1:TB, t1p:'tr', t2:TA, t2p:'bl',
+    },
+    {
+      type:'photo', file:'IMG_7006.jpeg', title:'Flower',
+      tilt:'-3.8deg', gap:'2.5rem',
+      t1:TA, t1p:'tl', t2:TB, t2p:'br',
+    },
+    {
+      type:'photo', file:'IMG_7617.jpeg', title:'Purple House',
+      tilt:'1.2deg', gap:'6rem',
+      t1:TB, t1p:'tr', t2:TA, t2p:'bl',
+    },
+    {
+      type:'photo', file:'IMG_0020.jpeg', title:'Open',
+      tilt:'-1.9deg', gap:'3.8rem',
+      t1:TA, t1p:'tl', t2:TB, t2p:'br',
+    },
+    {
+      type:'photo', file:'IMG_9195.jpeg', title:'The Wall',
+      tilt:'3.1deg', gap:'4.8rem',
+      t1:TB, t1p:'tr', t2:TA, t2p:'bl',
+    },
+    {
+      type:'photo', file:'IMG_7069.jpeg', title:'Night Wall',
+      tilt:'-2.2deg', gap:'2.2rem',
+      t1:TA, t1p:'tl', t2:TB, t2p:'br',
+    },
+    {
+      type:'photo', file:'IMG_6595.jpeg', title:'Yellow Dress',
+      tilt:'2.4deg', gap:'5.2rem',
+      t1:TB, t1p:'tr', t2:TA, t2p:'bl',
+    },
+    {
+      type:'photo', file:'IMG_9233.jpeg', title:'Bedroom',
+      tilt:'-4.1deg', gap:'3.3rem',
+      t1:TA, t1p:'tl', t2:TB, t2p:'br',
+    },
+    {
+      type:'photo', file:'Screenshot_2026-07-05_103457.png', title:'Laughter',
+      tilt:'1.6deg', gap:'4.5rem',
+      t1:TB, t1p:'tr', t2:TA, t2p:'bl',
+    },
+    // ---- VIDEOS (no tape, no border, raw) ----
+    {
+      type:'video', file:'HAIR.MP4', title:'Hair',
+      tilt:'-2.6deg', gap:'3.6rem',
+    },
+    {
+      type:'video', file:'GAP_3.mp4', title:'Gap',
+      tilt:'1.9deg', gap:'5.8rem',
+    },
+    {
+      type:'video', file:'BAM.mp4', title:'Bam',
+      tilt:'-1.1deg', gap:'2.9rem',
+    },
   ];
 
-  /* Tile palettes for the sub-gallery */
-  const tilePalettes = [
-    'linear-gradient(145deg, #c9a0a0, #4a3040)',
-    'linear-gradient(145deg, #1a2a5e, #060e2a)',
-    'linear-gradient(145deg, #b8cce0, #2c4055)',
-    'linear-gradient(145deg, #d4a857, #4a3018)',
-    'linear-gradient(145deg, #c8d8e8, #3a5068)',
-    'linear-gradient(145deg, #3a3228, #0e0c08)',
-  ];
-
-  const items = [
-    {
-      id: "purple-wall",
-      type: "photo",
-      palette: 0,
-      title: "Purple Wall Stillness",
-      size: "tall",
-      offset: "offset-0",
-      tilt: "-3deg",
-      tape: "pos-tl", tape2: "pos-br",
-      photos: [
-        { title: "Purple Wall Stillness", p: 0 },
-        { title: "Window Light",          p: 2 },
-        { title: "AC Unit Study",         p: 5 },
-      ]
-    },
-    {
-      id: "blue-wall-video",
-      type: "video",
-      palette: 1,
-      title: "Blue Wall",
-      size: "wide",
-      offset: "offset-3",
-      tilt: "1.5deg",
-      tape: "pos-tl", tape2: "pos-br",
-      photos: [{ title: "Blue Wall (Moving Image)", p: 1 }]
-    },
-    {
-      id: "blue-skirt",
-      type: "photo",
-      palette: 2,
-      title: "Blue Skirt, Faded Brick",
-      size: "lg",
-      offset: "offset-2",
-      tilt: "2.5deg",
-      tape: "pos-tr", tape2: "pos-bl",
-      photos: [
-        { title: "Blue Skirt, Faded Brick", p: 2 },
-        { title: "Sweater Texture",         p: 0 },
-        { title: "Sock Detail",             p: 5 },
-      ]
-    },
-    {
-      id: "two-sisters",
-      type: "photo",
-      palette: 3,
-      title: "Two Sisters, Golden Field",
-      size: "md",
-      offset: "offset-1",
-      tilt: "-2deg",
-      tape: "pos-bl", tape2: "pos-tr",
-      photos: [
-        { title: "Two Sisters, Golden Field", p: 3 },
-        { title: "Wind in the Grass",         p: 3 },
-      ]
-    },
-    {
-      id: "sky-figure",
-      type: "photo",
-      palette: 4,
-      title: "Sky, Reaching",
-      size: "tall",
-      offset: "offset-4",
-      tilt: "-1.5deg",
-      tape: "pos-tl", tape2: "pos-br",
-      photos: [
-        { title: "Sky, Reaching", p: 4 },
-        { title: "Cloud Study",   p: 4 },
-      ]
-    },
-    {
-      id: "bare-trees",
-      type: "photo",
-      palette: 5,
-      title: "Bare Trees, Winter",
-      size: "wide",
-      offset: "offset-5",
-      tilt: "2deg",
-      tape: "pos-br", tape2: "pos-tl",
-      photos: [{ title: "Bare Trees, Winter", p: 5 }]
+  /* Shuffle so photos and videos are mixed, not grouped */
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
     }
-  ];
+    return arr;
+  }
+  const items = shuffle([...allItems]);
 
-  const grid = document.getElementById('scatter-grid');
-  const viewHome = document.getElementById('view-home');
+  const scatterWrap  = document.getElementById('scatter-wrap');
+  const viewHome     = document.getElementById('view-home');
   const viewOverview = document.getElementById('view-overview');
-  const overviewTitle = document.getElementById('overview-title');
-  const photoGrid = document.getElementById('photo-grid');
-  const backBtn = document.getElementById('back-btn');
-  const lightbox = document.getElementById('lightbox');
-  const lbFrame = document.getElementById('lb-frame');
-  const lbTitle = document.getElementById('lb-title');
-  const lbClose = document.getElementById('lb-close');
+  const overviewTitle= document.getElementById('overview-title');
+  const photoGrid    = document.getElementById('photo-grid');
+  const backBtn      = document.getElementById('back-btn');
+  const lightbox     = document.getElementById('lightbox');
+  const lbImg        = document.getElementById('lb-img');
+  const lbTitle      = document.getElementById('lb-title');
+  const lbClose      = document.getElementById('lb-close');
 
   items.forEach(item => {
-    const el = document.createElement('div');
-    el.className = `scatter-item size-${item.size} ${item.offset} ${item.type === 'video' ? 'is-video' : ''}`;
-    el.style.setProperty('--tilt', item.tilt);
+    const wrap = document.createElement('div');
+    wrap.className = 'scatter-item';
+    wrap.style.setProperty('--tilt', item.tilt);
+    wrap.style.setProperty('--gap', item.gap);
 
-    const photoInner = item.type === 'video'
-      ? `<div class="sim" style="background:${palettes[item.palette]}"></div>
-         <div class="play-ring">▶</div>`
-      : `<div class="sim" style="background:${palettes[item.palette]}"></div>`;
-
-    el.innerHTML = `
-      <div class="tape ${item.tape}"></div>
-      <div class="tape ${item.tape2}"></div>
-      <div class="photo-face">${photoInner}</div>
-      <div class="polaroid-caption">${item.title}</div>
-    `;
-    el.addEventListener('click', () => openSeries(item.id));
-    grid.appendChild(el);
-  });
-
-  const scatterEls = document.querySelectorAll('.scatter-item');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
-  }, { threshold: 0.12 });
-  scatterEls.forEach((el, i) => setTimeout(() => observer.observe(el), i * 80));
-
-  function openSeries(id){
-    const item = items.find(x => x.id === id);
-    if (!item) return;
-    overviewTitle.textContent = item.title;
-    photoGrid.innerHTML = '';
-    item.photos.forEach(p => {
-      const tile = document.createElement('div');
-      tile.className = 'photo-tile';
-      tile.innerHTML = `
-        <div class="tile-inner">
-          <div class="frame-bg" style="background:${tilePalettes[p.p]}"></div>
-          <div class="label">${p.title}</div>
+    if(item.type === 'photo'){
+      wrap.innerHTML = `
+        <div class="photo-card">
+          <img src="${item.file}" alt="${item.title}" loading="lazy">
+          <img class="tape ${item.t1p}" src="${item.t1}" alt="">
+          <img class="tape ${item.t2p}" src="${item.t2}" alt="">
+          <div class="photo-caption">${item.title}</div>
         </div>
       `;
-      tile.addEventListener('click', () => openLightbox(p));
-      photoGrid.appendChild(tile);
-    });
-    viewHome.classList.remove('active');
-    viewOverview.classList.add('active');
-    window.scrollTo({top:0, behavior:'instant'});
-  }
+      wrap.addEventListener('click', () => openPhoto(item));
+    } else {
+      wrap.innerHTML = `
+        <div class="video-card">
+          <video src="${item.file}" muted loop playsinline preload="metadata"
+            onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0">
+          </video>
+          <div class="video-label">${item.title}</div>
+        </div>
+      `;
+    }
 
-  backBtn.addEventListener('click', () => {
-    viewOverview.classList.remove('active');
-    viewHome.classList.add('active');
-    window.scrollTo({top:0, behavior:'instant'});
+    scatterWrap.appendChild(wrap);
   });
 
-  function openLightbox(photo){
-    lbFrame.style.background = tilePalettes[photo.p];
-    lbTitle.textContent = photo.title;
+  /* Scroll reveal */
+  const els = document.querySelectorAll('.scatter-item');
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in-view'); });
+  },{threshold:0.08});
+  els.forEach((el,i)=>setTimeout(()=>obs.observe(el), i*55));
+
+  /* Clicking a photo shows it full-size in lightbox directly */
+  function openPhoto(item){
+    lbImg.src   = item.file;
+    lbImg.alt   = item.title;
+    lbTitle.textContent = item.title;
     lightbox.classList.add('active');
   }
-  lbClose.addEventListener('click', () => lightbox.classList.remove('active'));
-  lightbox.addEventListener('click', e => { if(e.target===lightbox) lightbox.classList.remove('active'); });
-  document.addEventListener('keydown', e => { if(e.key==='Escape') lightbox.classList.remove('active'); });
+
+  backBtn.addEventListener('click',()=>{
+    viewOverview.classList.remove('active');
+    viewHome.classList.add('active');
+    window.scrollTo({top:0,behavior:'instant'});
+  });
+
+  lbClose.addEventListener('click',()=>lightbox.classList.remove('active'));
+  lightbox.addEventListener('click',e=>{
+    if(e.target===lightbox) lightbox.classList.remove('active');
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape') lightbox.classList.remove('active');
+  });
 </script>
 </body>
 </html>
