@@ -101,14 +101,14 @@
 
   /* ── 3-COLUMN HANG GRID ── */
   .hang-wrap{
-    max-width:1300px; margin:0 auto;
-    padding:5rem 2.5rem 8rem;
+    max-width:1400px; margin:0 auto;
+    padding:5rem 2rem 8rem;
     margin-top:56px;
   }
   .hang-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:5rem 2.5rem;
+    gap:3.5rem 0rem;
     align-items:start;
   }
 
@@ -121,7 +121,7 @@
     animation:item-appear 0.6s ease forwards;
     animation-play-state:paused;
   }
-  .hang-item.visible{ animation-play-state:running; }
+  .hang-item:hover{ z-index:40 !important; }
   @keyframes item-appear{
     from{ opacity:0; transform:translateY(16px); }
     to{ opacity:1; transform:translateY(0); }
@@ -173,8 +173,8 @@
   .photo-card:hover{
     box-shadow:0 8px 20px rgba(0,0,0,0.4), 0 24px 50px rgba(0,0,0,0.35);
     animation-play-state:paused, running;
-    z-index:20;
-    transform:rotate(calc(var(--tilt)*0.1)) scale(1.03) translateY(-6px);
+    z-index:50;
+    transform:rotate(calc(var(--tilt)*0.1)) scale(1.04) translateY(-8px);
   }
 
   @keyframes develop{
@@ -241,8 +241,8 @@
   .video-card:hover{
     box-shadow:0 8px 20px rgba(0,0,0,0.5), 0 24px 50px rgba(0,0,0,0.4);
     animation-play-state:paused;
-    z-index:20;
-    transform:rotate(calc(var(--tilt)*0.1)) scale(1.03) translateY(-6px);
+    z-index:50;
+    transform:rotate(calc(var(--tilt)*0.1)) scale(1.04) translateY(-8px);
   }
   .video-card video{ display:block; width:100%; object-fit:cover; }
   .sound-btn{
@@ -443,29 +443,29 @@
   /* All 17 items in grid order — left to right, top to bottom, 3 per row */
   const allItems = [
     // Row 1
-    { type:'photo', file:'IMG_7441.jpeg',  title:'Stillness',    w:290, h:435, tilt:'-3deg',   sway:'7.2s' },
-    { type:'video', file:'HAIR.MP4',       title:'Hair',         w:340, h:210, tilt:'0.8deg',  sway:'6.5s' },
-    { type:'photo', file:'IMG_8381.jpeg',  title:'Blue',         w:285, h:428, tilt:'2.2deg',  sway:'8.1s' },
+    { type:'photo', file:'IMG_7441.jpeg',  title:'Stillness',    w:380, h:570, tilt:'-3deg',   sway:'7.2s', mt:'0px'    },
+    { type:'video', file:'HAIR.MP4',       title:'Hair',         w:440, h:272, tilt:'0.8deg',  sway:'6.5s', mt:'60px'   },
+    { type:'photo', file:'IMG_8381.jpeg',  title:'Blue',         w:375, h:562, tilt:'2.2deg',  sway:'8.1s', mt:'-40px'  },
     // Row 2
-    { type:'photo', file:'IMG_4776.jpeg',  title:'Sisters',      w:345, h:232, tilt:'-1.5deg', sway:'7.8s' },
-    { type:'photo', file:'IMG_8555.jpeg',  title:'Dusk Prayer',  w:340, h:228, tilt:'1.2deg',  sway:'6.9s' },
-    { type:'photo', file:'IMG_9195.jpeg',  title:'The Wall',     w:278, h:418, tilt:'-2.5deg', sway:'7.4s' },
+    { type:'photo', file:'IMG_4776.jpeg',  title:'Sisters',      w:440, h:296, tilt:'-1.5deg', sway:'7.8s', mt:'-60px'  },
+    { type:'photo', file:'IMG_8555.jpeg',  title:'Dusk Prayer',  w:435, h:292, tilt:'1.2deg',  sway:'6.9s', mt:'50px'   },
+    { type:'photo', file:'IMG_9195.jpeg',  title:'The Wall',     w:368, h:552, tilt:'-2.5deg', sway:'7.4s', mt:'-30px'  },
     // Row 3
-    { type:'photo', file:'IMG_5498.jpeg',  title:'Bond',         w:282, h:424, tilt:'2.8deg',  sway:'8.3s' },
-    { type:'video', file:'Gap 3.mp4',      title:'Gap',          w:345, h:212, tilt:'-0.8deg', sway:'7.0s' },
-    { type:'photo', file:'IMG_7617.jpeg',  title:'Purple House', w:280, h:420, tilt:'1.6deg',  sway:'6.7s' },
+    { type:'photo', file:'IMG_5498.jpeg',  title:'Bond',         w:372, h:558, tilt:'2.8deg',  sway:'8.3s', mt:'-50px'  },
+    { type:'video', file:'Gap 3.mp4',      title:'Gap',          w:440, h:272, tilt:'-0.8deg', sway:'7.0s', mt:'40px'   },
+    { type:'photo', file:'IMG_7617.jpeg',  title:'Purple House', w:370, h:555, tilt:'1.6deg',  sway:'6.7s', mt:'-40px'  },
     // Row 4
-    { type:'photo', file:'IMG_7069.jpeg',  title:'Night Wall',   w:345, h:232, tilt:'-2deg',   sway:'7.6s' },
-    { type:'photo', file:'IMG_7006.jpeg',  title:'Flower',       w:340, h:228, tilt:'1.4deg',  sway:'8.0s' },
-    { type:'photo', file:'IMG_0020.jpeg',  title:'Open',         w:342, h:230, tilt:'-1.2deg', sway:'7.2s' },
+    { type:'photo', file:'IMG_7069.jpeg',  title:'Night Wall',   w:440, h:296, tilt:'-2deg',   sway:'7.6s', mt:'-55px'  },
+    { type:'photo', file:'IMG_7006.jpeg',  title:'Flower',       w:435, h:292, tilt:'1.4deg',  sway:'8.0s', mt:'30px'   },
+    { type:'photo', file:'IMG_0020.jpeg',  title:'Open',         w:438, h:294, tilt:'-1.2deg', sway:'7.2s', mt:'-35px'  },
     // Row 5
-    { type:'photo', file:'IMG_6595.jpeg',  title:'Yellow Dress', w:345, h:232, tilt:'-1.8deg', sway:'6.8s', contain:true },
-    { type:'video', file:'Bam.mp4',        title:'Bam',          w:342, h:210, tilt:'1.1deg',  sway:'7.5s' },
-    { type:'photo', file:'IMG_8762.jpeg',  title:'Yellow',       w:278, h:418, tilt:'-3deg',   sway:'8.2s' },
+    { type:'photo', file:'IMG_6595.jpeg',  title:'Yellow Dress', w:440, h:296, tilt:'-1.8deg', sway:'6.8s', mt:'-45px',  contain:true },
+    { type:'video', file:'Bam.mp4',        title:'Bam',          w:438, h:270, tilt:'1.1deg',  sway:'7.5s', mt:'55px'   },
+    { type:'photo', file:'IMG_8762.jpeg',  title:'Yellow',       w:368, h:552, tilt:'-3deg',   sway:'8.2s', mt:'-50px'  },
     // Row 6
-    { type:'photo', file:'IMG_9233.jpeg',  title:'Bedroom',      w:345, h:232, tilt:'-1.8deg', sway:'7.1s' },
-    { type:'photo', file:'Screenshot 2026-07-05 103457.png', title:'Laughter', w:340, h:252, tilt:'1.4deg', sway:'6.6s', noBorder:true },
-    { type:'photo', file:'IMG_0610.jpeg',  title:'Field',        w:285, h:428, tilt:'-1.5deg', sway:'7.9s' },
+    { type:'photo', file:'IMG_9233.jpeg',  title:'Bedroom',      w:440, h:296, tilt:'-1.8deg', sway:'7.1s', mt:'-40px'  },
+    { type:'photo', file:'Screenshot 2026-07-05 103457.png', title:'Laughter', w:432, h:320, tilt:'1.4deg', sway:'6.6s', mt:'45px',  noBorder:true },
+    { type:'photo', file:'IMG_0610.jpeg',  title:'Field',        w:375, h:562, tilt:'-1.5deg', sway:'7.9s', mt:'-35px'  },
   ];
 
   /* Separate photo list for lightbox navigation */
@@ -504,7 +504,7 @@
   allItems.forEach(item => {
     const wrap = document.createElement('div');
     wrap.className = 'hang-item';
-    wrap.style.cssText = `--tilt:${item.tilt}; --sway:${item.sway};`;
+    wrap.style.cssText = `--tilt:${item.tilt}; --sway:${item.sway}; margin-top:${item.mt || '0px'}; position:relative; z-index:1;`;
 
     if(item.type === 'photo'){
       const cardClass = item.noBorder ? 'photo-card no-border' : 'photo-card';
