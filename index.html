@@ -16,11 +16,9 @@
   :root{
     --red:#c8101a;
     --red-deep:#8a0a10;
-    --red-light:#e8141f;
     --gold:#eed79a;
     --cream:#f3e6c8;
     --ink:#1c1310;
-    --darkroom-amber: rgba(255,60,0,0.07);
   }
 
   *{ box-sizing:border-box; margin:0; padding:0; }
@@ -34,358 +32,255 @@
     min-height:100vh;
   }
 
-  /* ===== FILM GRAIN — animated noise over entire page ===== */
+  /* ── Film grain ── */
   body::before{
-    content:'';
-    position:fixed; inset:0;
-    z-index:1000;
-    pointer-events:none;
-    opacity:0.045;
-    animation: grain 0.5s steps(1) infinite;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-repeat:repeat;
+    content:''; position:fixed; inset:0; z-index:1000; pointer-events:none;
+    opacity:0.045; animation:grain 0.5s steps(1) infinite;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size:200px 200px;
   }
-  /* Subtle safelight red vignette around screen edges */
+  /* Safelight vignette */
   body::after{
-    content:'';
-    position:fixed; inset:0;
-    z-index:999;
-    pointer-events:none;
-    background: radial-gradient(ellipse at center,
-      transparent 40%,
-      rgba(80,0,0,0.35) 100%
-    );
+    content:''; position:fixed; inset:0; z-index:999; pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 40%, rgba(80,0,0,0.32) 100%);
   }
   @keyframes grain{
-    0%{ background-position:0 0; }
-    10%{ background-position:-5% -10%; }
-    20%{ background-position:-15% 5%; }
-    30%{ background-position:7% -25%; }
-    40%{ background-position:-5% 25%; }
-    50%{ background-position:-15% 10%; }
-    60%{ background-position:15% 0%; }
-    70%{ background-position:0% 15%; }
-    80%{ background-position:3% 35%; }
-    90%{ background-position:-10% 10%; }
-    100%{ background-position:0 0; }
+    0%{ background-position:0 0; }        20%{ background-position:-15% 5%; }
+    40%{ background-position:-5% 25%; }   60%{ background-position:15% 0%; }
+    80%{ background-position:3% 35%; }    100%{ background-position:0 0; }
   }
 
   h1,h2,h3{ font-family:'OutOfAfrica', sans-serif; font-weight:400; letter-spacing:0.03em; }
   a{ color:inherit; text-decoration:none; }
 
-  /* ===== DARKROOM LOADING SCREEN ===== */
+  /* ── LOADER ── */
   #loader{
-    position:fixed; inset:0;
-    background:var(--red-deep);
-    z-index:5000;
-    display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-    gap:1.6rem;
+    position:fixed; inset:0; background:var(--red-deep); z-index:5000;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.6rem;
     transition:opacity 0.8s ease;
   }
-  #loader.fade-out{
-    opacity:0; pointer-events:none;
-  }
+  #loader.fade-out{ opacity:0; pointer-events:none; }
   .loader-word{
     font-family:'OutOfAfrica', sans-serif;
-    font-size:clamp(2rem,6vw,4rem);
-    letter-spacing:0.2em;
-    color:var(--cream);
-    opacity:0.15;
-    animation: safelight-pulse 2.5s ease-in-out infinite;
+    font-size:clamp(2rem,6vw,4rem); letter-spacing:0.2em; color:var(--cream);
+    opacity:0.15; animation:safelight 2.5s ease-in-out infinite;
   }
   .loader-line{
-    width:180px; height:1px;
-    background:rgba(243,230,200,0.2);
-    position:relative; overflow:hidden;
+    width:180px; height:1px; background:rgba(243,230,200,0.2); position:relative; overflow:hidden;
   }
   .loader-line::after{
-    content:'';
-    position:absolute; top:0; left:-100%;
-    width:100%; height:100%;
-    background:var(--cream);
-    animation: loader-sweep 2s ease-in-out infinite;
+    content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+    background:var(--cream); animation:sweep 2s ease-in-out infinite;
   }
-  .loader-sub{
-    font-size:0.6rem; letter-spacing:0.3em; text-transform:uppercase;
-    opacity:0.3; color:var(--cream);
-  }
-  @keyframes safelight-pulse{
-    0%,100%{ opacity:0.1; }
-    50%{ opacity:0.5; }
-  }
-  @keyframes loader-sweep{
-    0%{ left:-100%; }
-    100%{ left:100%; }
-  }
+  .loader-sub{ font-size:0.6rem; letter-spacing:0.3em; text-transform:uppercase; opacity:0.3; color:var(--cream); }
+  @keyframes safelight{ 0%,100%{ opacity:0.1; } 50%{ opacity:0.5; } }
+  @keyframes sweep{ 0%{ left:-100%; } 100%{ left:100%; } }
 
-  /* ===== NAV ===== */
+  /* ── NAV ── */
   .navbar{
     display:flex; align-items:center; justify-content:space-between;
     padding:1.2rem 2.5rem;
     border-bottom:1px solid rgba(255,255,255,0.1);
-    position:fixed; top:0; left:0; right:0;
-    z-index:100;
+    position:fixed; top:0; left:0; right:0; z-index:100;
     background:var(--red);
   }
   .navbar .brand{
     font-family:'OutOfAfrica', sans-serif;
-    font-size:0.9rem; letter-spacing:0.15em; text-transform:uppercase;
-    cursor:pointer;
+    font-size:0.9rem; letter-spacing:0.15em; text-transform:uppercase; cursor:pointer;
   }
-  .navbar nav{ display:flex; gap:2rem; align-items:center; }
+  .navbar nav{ display:flex; gap:2rem; }
   .navbar nav a{
     font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase;
     opacity:0.75; transition:opacity 0.2s; cursor:pointer;
   }
   .navbar nav a:hover{ opacity:1; text-decoration:underline; }
 
-  /* ===== VIEWS ===== */
+  /* ── VIEWS ── */
   .view{ display:none; }
   .view.active{ display:block; }
 
-  /* ===== STAGE ===== */
-  .stage{
-    position:relative;
-    width:100%;
+  /* ── 3-COLUMN HANG GRID ── */
+  .hang-wrap{
+    max-width:1300px; margin:0 auto;
+    padding:5rem 2.5rem 8rem;
     margin-top:56px;
   }
-
-  .scatter-item{
-    position:absolute;
-    cursor:pointer;
-    /* starts invisible — develop animation handles reveal */
+  .hang-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:5rem 2.5rem;
+    align-items:start;
   }
 
-  /* ===== DARKROOM DEVELOP ANIMATION ===== */
-  /* Photos start completely washed out and develop into full color */
-  .photo-card{
+  /* Each hanging item */
+  .hang-item{
+    display:flex; flex-direction:column; align-items:center;
     position:relative;
-    transform:rotate(var(--tilt));
-    transition:transform 0.3s ease, box-shadow 0.3s ease;
-    filter: brightness(2.5) saturate(0) contrast(0.4) sepia(0.3);
-    animation: develop 3s ease-out forwards;
+    padding-top:44px;
+    opacity:0;
+    animation:item-appear 0.6s ease forwards;
     animation-play-state:paused;
-    /* Polaroid frame */
-    background: #f5f2ec;
-    padding: 10px 10px 52px 10px;
-    box-shadow:
-      0 2px 4px rgba(0,0,0,0.2),
-      0 10px 28px rgba(0,0,0,0.4),
-      0 22px 55px rgba(0,0,0,0.28);
-    transform-origin: center top;
+  }
+  .hang-item.visible{ animation-play-state:running; }
+  @keyframes item-appear{
+    from{ opacity:0; transform:translateY(16px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* String coming down from the nail */
+  .hang-item::before{
+    content:'';
+    position:absolute; top:0; left:50%;
+    transform:translateX(-50%);
+    width:1px; height:38px;
+    background:linear-gradient(to bottom, rgba(243,230,200,0.45), rgba(243,230,200,0.15));
+    z-index:2;
+  }
+  /* Nail / pin at top */
+  .hang-item::after{
+    content:'';
+    position:absolute; top:-5px; left:50%;
+    transform:translateX(-50%);
+    width:8px; height:8px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #d0c0a0, #7a6040);
+    box-shadow:0 1px 3px rgba(0,0,0,0.5);
+    z-index:3;
+  }
+
+  /* Gentle sway */
+  @keyframes sway{
+    0%,100%{ transform:rotate(var(--tilt)); }
+    35%{ transform:rotate(calc(var(--tilt) + 0.7deg)) translateX(1px); }
+    65%{ transform:rotate(calc(var(--tilt) - 0.7deg)) translateX(-1px); }
+  }
+
+  /* ── PHOTO CARD (Polaroid) ── */
+  .photo-card{
+    position:relative; cursor:pointer;
+    background:#f5f2ec;
+    padding:9px 9px 50px 9px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.25), 0 12px 30px rgba(0,0,0,0.4);
+    transform-origin:center top;
+    transform:rotate(var(--tilt));
+    animation:sway var(--sway,7s) ease-in-out infinite, develop 3s ease-out forwards;
+    animation-play-state:paused, paused;
+    transition:box-shadow 0.3s;
   }
   .photo-card.developing{
-    animation-play-state:running;
+    animation-play-state:running, running;
   }
-  @keyframes develop{
-    0%{
-      filter: brightness(2.5) saturate(0) contrast(0.4) sepia(0.3);
-    }
-    30%{
-      filter: brightness(1.8) saturate(0.2) contrast(0.7) sepia(0.2);
-    }
-    60%{
-      filter: brightness(1.3) saturate(0.6) contrast(0.9) sepia(0.12);
-    }
-    85%{
-      filter: brightness(1.05) saturate(0.9) contrast(1.02) sepia(0.06);
-    }
-    100%{
-      filter: brightness(1) saturate(1) contrast(1.04) sepia(0.05);
-    }
+  .photo-card:hover{
+    box-shadow:0 8px 20px rgba(0,0,0,0.4), 0 24px 50px rgba(0,0,0,0.35);
+    animation-play-state:paused, running;
+    z-index:20;
+    transform:rotate(calc(var(--tilt)*0.1)) scale(1.03) translateY(-6px);
   }
 
-  .photo-card:hover{
-    transform:rotate(calc(var(--tilt)*0.1)) scale(1.02) translateY(-8px);
-    box-shadow:0 14px 36px rgba(0,0,0,0.5), 0 30px 65px rgba(0,0,0,0.35);
-    z-index:50;
+  @keyframes develop{
+    0%{   filter:brightness(2.5) saturate(0) contrast(0.4) sepia(0.3); }
+    35%{  filter:brightness(1.8) saturate(0.2) contrast(0.7) sepia(0.2); }
+    65%{  filter:brightness(1.3) saturate(0.6) contrast(0.9) sepia(0.1); }
+    100%{ filter:brightness(1) saturate(1) contrast(1.04) sepia(0.05); }
   }
-  .photo-card img{
+
+  .photo-card .face{
+    position:relative; overflow:hidden;
+    display:block;
+  }
+  .photo-card .face img{
     display:block; width:100%; height:100%;
-    object-fit:cover;
-    object-position:center center;
+    object-fit:cover; object-position:center center;
   }
-  /* Vignette sits inside the image face */
+  /* Vignette */
   .photo-card .face::after{
-    content:'';
-    position:absolute; inset:0;
-    background:radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,0.18) 100%);
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,0.2) 100%);
     pointer-events:none; z-index:2;
   }
-  /* Hover gradient — inside image face, sits above the polaroid strip */
+  /* Hover title overlay inside photo area */
   .photo-overlay{
     position:absolute;
-    bottom:52px;
-    left:10px; right:10px;
+    bottom:50px; left:9px; right:9px;
     background:linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
-    padding:1.6rem 0.8rem 0.7rem;
+    padding:1.4rem 0.8rem 0.6rem;
     opacity:0; transition:opacity 0.25s;
-    font-size:0.6rem; letter-spacing:0.16em; text-transform:uppercase;
+    font-size:0.58rem; letter-spacing:0.16em; text-transform:uppercase;
     color:rgba(255,255,255,0.92); z-index:3;
   }
   .photo-card:hover .photo-overlay{ opacity:1; }
   /* Caption in the white polaroid strip */
   .polaroid-caption{
-    position:absolute;
-    bottom:0; left:10px; right:10px;
-    height:52px;
+    position:absolute; bottom:0; left:9px; right:9px; height:50px;
     display:flex; align-items:center; justify-content:center;
-    font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase;
-    color:#7a6a58;
-    opacity:0; transition:opacity 0.2s;
+    font-size:0.56rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:#7a6a58; opacity:0; transition:opacity 0.2s;
   }
   .photo-card:hover .polaroid-caption{ opacity:1; }
-  /* Screenshot — no polaroid frame, keep everything else */
+
+  /* No-border variant (screenshot) */
   .photo-card.no-border{
     background:transparent; padding:0;
-    box-shadow:0 6px 22px rgba(0,0,0,0.4), 0 18px 50px rgba(0,0,0,0.3);
+    box-shadow:0 4px 14px rgba(0,0,0,0.4), 0 14px 35px rgba(0,0,0,0.3);
   }
   .photo-card.no-border .photo-overlay{ bottom:0; left:0; right:0; }
 
-  /* ===== HANGING VIDEO — wire + clothespin clips ===== */
-  .video-wrap{
-    position:relative;
-    padding-top:48px; /* space for wire and clips above */
-  }
-  /* The wire stretching wider than the video */
-  .video-wire{
-    position:absolute;
-    top:10px; left:-30px; right:-30px;
-    height:2px;
-    background:linear-gradient(90deg,
-      transparent 0%,
-      rgba(243,230,200,0.35) 4%,
-      rgba(243,230,200,0.5) 50%,
-      rgba(243,230,200,0.35) 96%,
-      transparent 100%
-    );
-    z-index:5;
-  }
-  /* Clothespin clips */
-  .clip{
-    position:absolute;
-    top:2px;
-    width:10px; height:28px;
-    background:linear-gradient(180deg, #5a4030, #3a2818);
-    border-radius:2px 2px 3px 3px;
-    z-index:6;
-    box-shadow:0 2px 4px rgba(0,0,0,0.4);
-  }
-  .clip::after{
-    content:'';
-    position:absolute;
-    bottom:4px; left:50%;
-    transform:translateX(-50%);
-    width:4px; height:8px;
-    background:rgba(255,255,255,0.12);
-    border-radius:1px;
-  }
-  .clip-left{ left:18%; }
-  .clip-right{ right:18%; }
-  /* Gentle sway animation */
-  @keyframes sway{
-    0%,100%{ transform:rotate(var(--tilt)); }
-    30%{ transform:rotate(calc(var(--tilt) + 0.6deg)) translateX(1px); }
-    70%{ transform:rotate(calc(var(--tilt) - 0.6deg)) translateX(-1px); }
-  }
-
-  /* Hanging string above each photo */
-  .scatter-item::before{
-    content:'';
-    display:none; /* enabled only for photo items via JS */
-    position:absolute;
-    top:-28px; left:50%;
-    transform:translateX(-50%);
-    width:1px; height:28px;
-    background:rgba(243,230,200,0.25);
-    z-index:5;
-  }
-  .scatter-item.is-photo::before{ display:block; }
-
-  /* Hanging pin at top */
-  .scatter-item.is-photo::after{
-    content:'';
-    position:absolute;
-    top:-34px; left:50%;
-    transform:translateX(-50%);
-    width:6px; height:6px;
-    border-radius:50%;
-    background:rgba(243,230,200,0.4);
-    z-index:5;
-  }
-
-  /* ===== VIDEO card ===== */
+  /* ── VIDEO CARD ── */
   .video-card{
-    position:relative;
-    box-shadow:0 8px 30px rgba(0,0,0,0.55);
-    overflow:hidden;
-    transform:rotate(var(--tilt));
-    transform-origin: center top;
+    position:relative; cursor:pointer;
     background:#000;
-    animation: sway 6s ease-in-out infinite;
+    box-shadow:0 3px 8px rgba(0,0,0,0.3), 0 12px 30px rgba(0,0,0,0.45);
+    transform-origin:center top;
+    transform:rotate(var(--tilt));
+    animation:sway var(--sway,7s) ease-in-out infinite;
     animation-play-state:paused;
+    transition:box-shadow 0.3s;
+    overflow:hidden;
   }
   .video-card.developing{ animation-play-state:running; }
   .video-card:hover{
+    box-shadow:0 8px 20px rgba(0,0,0,0.5), 0 24px 50px rgba(0,0,0,0.4);
     animation-play-state:paused;
-    transform:rotate(calc(var(--tilt)*0.1)) scale(1.02) translateY(-6px);
-    z-index:50;
+    z-index:20;
+    transform:rotate(calc(var(--tilt)*0.1)) scale(1.03) translateY(-6px);
   }
-  @keyframes fadein{
-    from{ opacity:0; }
-    to{ opacity:1; }
-  }
-  .video-card:hover{
-    transform:rotate(calc(var(--tilt)*0.1)) scale(1.02) translateY(-6px);
-    z-index:50;
-  }
-  .video-card video{ display:block; width:100%; object-fit:cover; background:#000; }
+  .video-card video{ display:block; width:100%; object-fit:cover; }
   .sound-btn{
-    position:absolute; bottom:10px; right:12px;
-    background:rgba(0,0,0,0.55);
-    border:1px solid rgba(255,255,255,0.4);
-    color:#fff; font-size:0.62rem;
-    padding:3px 9px; cursor:pointer;
-    border-radius:2px; letter-spacing:0.08em;
-    z-index:10; transition:background 0.2s;
+    position:absolute; bottom:8px; right:10px;
+    background:rgba(0,0,0,0.55); border:1px solid rgba(255,255,255,0.35);
+    color:#fff; font-size:0.6rem; padding:3px 8px; cursor:pointer;
+    border-radius:2px; letter-spacing:0.08em; z-index:10;
+    transition:background 0.2s;
   }
-  .sound-btn:hover{ background:rgba(0,0,0,0.8); }
+  .sound-btn:hover{ background:rgba(0,0,0,0.85); }
 
-  /* ===== SERIES VIEW ===== */
+  /* ── SERIES VIEWS ── */
   .series-header{
     padding:6rem 2.5rem 2rem;
     display:flex; align-items:center; gap:2rem;
     border-bottom:1px solid rgba(255,255,255,0.1);
   }
   .back-btn{
-    background:none;
-    border:1px solid var(--gold); color:var(--gold);
+    background:none; border:1px solid var(--gold); color:var(--gold);
     font-family:'Work Sans', sans-serif;
     font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
-    padding:0.55rem 1.1rem; cursor:pointer;
-    transition:background 0.2s, color 0.2s; white-space:nowrap;
+    padding:0.55rem 1.1rem; cursor:pointer; transition:background 0.2s, color 0.2s; white-space:nowrap;
   }
   .back-btn:hover{ background:var(--gold); color:var(--ink); }
   .series-header h2{ font-size:clamp(1.6rem,4vw,2.4rem); }
-
   .series-grid{
     padding:2rem 2.5rem 5rem;
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
-    gap:1.8rem;
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:1.8rem;
   }
   .series-tile{
     cursor:pointer; overflow:hidden; position:relative;
-    box-shadow:0 6px 20px rgba(0,0,0,0.4);
-    transition:transform 0.3s, box-shadow 0.3s;
+    box-shadow:0 6px 20px rgba(0,0,0,0.4); transition:transform 0.3s, box-shadow 0.3s;
     filter:sepia(0.05) contrast(1.04);
   }
   .series-tile:hover{ transform:scale(1.02); box-shadow:0 14px 36px rgba(0,0,0,0.55); }
-  .series-tile img{ width:100%; height:340px; object-fit:cover; display:block; transition:transform 0.4s; }
+  .series-tile img{ width:100%; height:320px; object-fit:cover; display:block; transition:transform 0.4s; }
   .series-tile:hover img{ transform:scale(1.05); }
-  .series-tile video{ width:100%; height:340px; object-fit:cover; display:block; }
+  .series-tile video{ width:100%; height:320px; object-fit:cover; display:block; }
   .series-tile .tile-label{
     position:absolute; bottom:0; left:0; right:0;
     background:linear-gradient(to top, rgba(0,0,0,0.78), transparent);
@@ -393,46 +288,29 @@
     font-size:0.62rem; letter-spacing:0.16em; text-transform:uppercase; color:#fff;
   }
 
-  /* ===== ABOUT ===== */
-  .about-wrap{
-    padding:8rem 2.5rem 5rem;
-    max-width:780px; margin:0 auto;
-  }
+  /* ── ABOUT ── */
+  .about-wrap{ padding:8rem 2.5rem 5rem; max-width:780px; margin:0 auto; }
   .about-wrap h2{ font-size:clamp(2rem,5vw,3.5rem); margin-bottom:2rem; line-height:1.1; }
   .about-wrap p{ font-size:1rem; line-height:1.8; opacity:0.85; margin-bottom:1.4rem; }
-  .contact-block{
-    margin-top:3rem; padding-top:2rem;
-    border-top:1px solid rgba(255,255,255,0.12);
-  }
+  .contact-block{ margin-top:3rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.12); }
   .contact-block h3{ font-size:1.3rem; margin-bottom:1.2rem; }
   .contact-link{
-    display:inline-block;
-    font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase;
-    border:1px solid var(--gold); color:var(--gold);
-    padding:0.75rem 1.6rem;
-    transition:background 0.2s, color 0.2s;
-    margin-right:1rem; margin-bottom:1rem;
+    display:inline-block; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase;
+    border:1px solid var(--gold); color:var(--gold); padding:0.75rem 1.6rem;
+    transition:background 0.2s, color 0.2s; margin-right:1rem; margin-bottom:1rem;
   }
   .contact-link:hover{ background:var(--gold); color:var(--ink); }
 
-  /* ===== LIGHTBOX ===== */
+  /* ── LIGHTBOX ── */
   .lightbox{
-    position:fixed; inset:0;
-    background:rgba(5,2,1,0.97);
+    position:fixed; inset:0; background:rgba(5,2,1,0.97);
     display:none; align-items:center; justify-content:center;
     z-index:300; padding:2rem;
   }
   .lightbox.active{ display:flex; }
   .lb-inner{ max-width:900px; width:100%; text-align:center; }
-  .lb-inner img{
-    width:100%; max-height:82vh; object-fit:contain; display:block;
-    filter:sepia(0.05) contrast(1.04);
-  }
-  .lb-title{
-    margin-top:0.8rem;
-    font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase;
-    color:rgba(255,255,255,0.4);
-  }
+  .lb-inner img{ width:100%; max-height:82vh; object-fit:contain; display:block; filter:sepia(0.05) contrast(1.04); }
+  .lb-title{ margin-top:0.8rem; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
   .lb-close{
     position:fixed; top:1.8rem; right:1.8rem;
     background:none; border:1px solid var(--gold); color:var(--gold);
@@ -444,56 +322,41 @@
     position:fixed; top:50%; transform:translateY(-50%);
     background:none; border:1px solid rgba(255,255,255,0.25); color:#fff;
     width:44px; height:44px; border-radius:50%; font-size:1.1rem; cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    transition:background 0.2s;
+    display:flex; align-items:center; justify-content:center; transition:background 0.2s;
   }
   .lb-nav:hover{ background:rgba(255,255,255,0.1); }
   .lb-prev{ left:1.5rem; }
   .lb-next{ right:1.5rem; }
-  .lb-counter{
-    position:fixed; bottom:1.8rem; left:50%; transform:translateX(-50%);
-    font-size:0.58rem; letter-spacing:0.2em; color:rgba(255,255,255,0.3);
-  }
+  .lb-counter{ position:fixed; bottom:1.8rem; left:50%; transform:translateX(-50%); font-size:0.58rem; letter-spacing:0.2em; color:rgba(255,255,255,0.3); }
 
-  /* ===== MOBILE ===== */
-  @media(max-width:768px){
+  /* ── MOBILE ── */
+  @media(max-width:900px){
+    .hang-grid{ grid-template-columns:repeat(2,1fr); gap:4rem 2rem; }
+  }
+  @media(max-width:560px){
+    .hang-grid{ grid-template-columns:1fr; }
     .navbar{ padding:1rem 1.2rem; }
     .navbar nav{ gap:0.8rem; }
     .navbar nav a{ font-size:0.6rem; }
-    .stage{ margin-top:52px; height:auto !important;
-      display:flex; flex-direction:column; align-items:center; padding:2rem 0 4rem; }
-    .scatter-item{
-      position:relative !important; top:auto !important; left:auto !important;
-      width:88vw !important; margin:1.8rem auto !important; display:block;
-    }
-    .scatter-item::before, .scatter-item::after{ display:none !important; }
-    .photo-card{ transform:none !important; width:100% !important; }
-    .video-card{ transform:none !important; width:100% !important; }
-    .photo-card .face{ width:100% !important; height:280px !important; }
-    .photo-card .face img{ width:100% !important; height:100% !important; }
-    .video-card video{ height:220px !important; }
-    .series-grid{ grid-template-columns:1fr; padding:1.5rem; }
     .about-wrap{ padding:6rem 1.5rem 4rem; }
+    .series-grid{ padding:1.5rem; }
   }
   @media(prefers-reduced-motion:reduce){
+    .photo-card, .video-card{ animation:none; filter:none; }
     body::before{ animation:none; }
-    .photo-card{ animation:none; filter:none; }
-    .video-card{ animation:none; opacity:1; }
-    .scatter-item, .photo-card, .video-card, .series-tile{ transition:none; }
     #loader{ display:none !important; }
   }
 </style>
 </head>
 <body>
 
-<!-- ===== DARKROOM LOADER ===== -->
 <div id="loader">
   <div class="loader-word">Developing</div>
   <div class="loader-line"></div>
   <div class="loader-sub">Elijah Che Williams — Photography</div>
 </div>
 
-<!-- ===== HOME ===== -->
+<!-- HOME -->
 <div class="view active" id="view-home">
   <header class="navbar">
     <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
@@ -503,10 +366,12 @@
       <a onclick="showView('view-about')">A Deeper Look</a>
     </nav>
   </header>
-  <div class="stage" id="stage"></div>
+  <div class="hang-wrap">
+    <div class="hang-grid" id="hang-grid"></div>
+  </div>
 </div>
 
-<!-- ===== IMAGES ===== -->
+<!-- IMAGES -->
 <div class="view" id="view-images">
   <header class="navbar">
     <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
@@ -523,7 +388,7 @@
   <div class="series-grid" id="images-grid"></div>
 </div>
 
-<!-- ===== MOVING IMAGES ===== -->
+<!-- MOVING IMAGES -->
 <div class="view" id="view-moving">
   <header class="navbar">
     <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
@@ -540,7 +405,7 @@
   <div class="series-grid" id="moving-grid"></div>
 </div>
 
-<!-- ===== ABOUT ===== -->
+<!-- ABOUT -->
 <div class="view" id="view-about">
   <header class="navbar">
     <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
@@ -562,7 +427,7 @@
   </div>
 </div>
 
-<!-- ===== LIGHTBOX ===== -->
+<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <button class="lb-close" id="lb-close">✕</button>
   <button class="lb-nav lb-prev" id="lb-prev">‹</button>
@@ -575,53 +440,49 @@
 </div>
 
 <script>
-  /* ── DATA ── */
-  const photos = [
-    // ── ROW 1: max bottom 682 ──
-    { file:'IMG_7441.jpeg',  title:'Stillness',     lp:2,  tp:80,   w:360, h:540, tilt:'-3deg'   },
-    { file:'IMG_8381.jpeg',  title:'Blue',          lp:71, tp:80,   w:350, h:530, tilt:'2.2deg'  },
-    // ── ROW 2: starts 830, max bottom 1402 ──
-    { file:'IMG_4776.jpeg',  title:'Sisters',       lp:4,  tp:900,  w:510, h:342, tilt:'-1.8deg' },
-    { file:'IMG_8555.jpeg',  title:'Dusk Prayer',   lp:38, tp:830,  w:500, h:335, tilt:'2.5deg'  },
-    { file:'IMG_9195.jpeg',  title:'The Wall',      lp:72, tp:860,  w:320, h:480, tilt:'-2.8deg' },
-    // ── ROW 3: starts 2000, max bottom 2602 ──
-    { file:'IMG_5498.jpeg',  title:'Bond',          lp:2,  tp:2020, w:345, h:520, tilt:'3deg'    },
-    { file:'IMG_7617.jpeg',  title:'Purple House',  lp:71, tp:2000, w:335, h:505, tilt:'1.8deg'  },
-    // ── ROW 4: starts 2750, max bottom 3224 ──
-    { file:'IMG_7069.jpeg',  title:'Night Wall',    lp:3,  tp:2820, w:510, h:342, tilt:'-2.3deg' },
-    { file:'IMG_7006.jpeg',  title:'Flower',        lp:34, tp:2750, w:490, h:328, tilt:'1.6deg'  },
-    { file:'IMG_0020.jpeg',  title:'Open',          lp:65, tp:2780, w:505, h:338, tilt:'-1.2deg' },
-    // ── ROW 5: starts 3920, max bottom 4477 ──
-    { file:'IMG_6595.jpeg',  title:'Yellow Dress',  lp:2,  tp:3940, w:510, h:342, tilt:'-2deg',  contain:true },
-    { file:'IMG_8762.jpeg',  title:'Yellow',        lp:71, tp:3920, w:330, h:495, tilt:'-3.2deg' },
-    // ── ROW 6: starts 4610, max bottom 5084 ──
-    { file:'IMG_9233.jpeg',  title:'Bedroom',       lp:4,  tp:4680, w:510, h:342, tilt:'-2deg'   },
-    { file:'Screenshot 2026-07-05 103457.png', title:'Laughter', lp:42, tp:4610, w:490, h:360, tilt:'1.4deg', noBorder:true },
-    // ── ROW 7: starts 5260, max bottom 5877 ──
-    { file:'IMG_0610.jpeg',  title:'Field',         lp:34, tp:5260, w:370, h:555, tilt:'-1.8deg' },
+  /* All 17 items in grid order — left to right, top to bottom, 3 per row */
+  const allItems = [
+    // Row 1
+    { type:'photo', file:'IMG_7441.jpeg',  title:'Stillness',    w:290, h:435, tilt:'-3deg',   sway:'7.2s' },
+    { type:'video', file:'HAIR.MP4',       title:'Hair',         w:340, h:210, tilt:'0.8deg',  sway:'6.5s' },
+    { type:'photo', file:'IMG_8381.jpeg',  title:'Blue',         w:285, h:428, tilt:'2.2deg',  sway:'8.1s' },
+    // Row 2
+    { type:'photo', file:'IMG_4776.jpeg',  title:'Sisters',      w:345, h:232, tilt:'-1.5deg', sway:'7.8s' },
+    { type:'photo', file:'IMG_8555.jpeg',  title:'Dusk Prayer',  w:340, h:228, tilt:'1.2deg',  sway:'6.9s' },
+    { type:'photo', file:'IMG_9195.jpeg',  title:'The Wall',     w:278, h:418, tilt:'-2.5deg', sway:'7.4s' },
+    // Row 3
+    { type:'photo', file:'IMG_5498.jpeg',  title:'Bond',         w:282, h:424, tilt:'2.8deg',  sway:'8.3s' },
+    { type:'video', file:'Gap 3.mp4',      title:'Gap',          w:345, h:212, tilt:'-0.8deg', sway:'7.0s' },
+    { type:'photo', file:'IMG_7617.jpeg',  title:'Purple House', w:280, h:420, tilt:'1.6deg',  sway:'6.7s' },
+    // Row 4
+    { type:'photo', file:'IMG_7069.jpeg',  title:'Night Wall',   w:345, h:232, tilt:'-2deg',   sway:'7.6s' },
+    { type:'photo', file:'IMG_7006.jpeg',  title:'Flower',       w:340, h:228, tilt:'1.4deg',  sway:'8.0s' },
+    { type:'photo', file:'IMG_0020.jpeg',  title:'Open',         w:342, h:230, tilt:'-1.2deg', sway:'7.2s' },
+    // Row 5
+    { type:'photo', file:'IMG_6595.jpeg',  title:'Yellow Dress', w:345, h:232, tilt:'-1.8deg', sway:'6.8s', contain:true },
+    { type:'video', file:'Bam.mp4',        title:'Bam',          w:342, h:210, tilt:'1.1deg',  sway:'7.5s' },
+    { type:'photo', file:'IMG_8762.jpeg',  title:'Yellow',       w:278, h:418, tilt:'-3deg',   sway:'8.2s' },
+    // Row 6
+    { type:'photo', file:'IMG_9233.jpeg',  title:'Bedroom',      w:345, h:232, tilt:'-1.8deg', sway:'7.1s' },
+    { type:'photo', file:'Screenshot 2026-07-05 103457.png', title:'Laughter', w:340, h:252, tilt:'1.4deg', sway:'6.6s', noBorder:true },
+    { type:'photo', file:'IMG_0610.jpeg',  title:'Field',        w:285, h:428, tilt:'-1.5deg', sway:'7.9s' },
   ];
 
-  const videos = [
-    // Alongside row 1: top 80, bottom 475
-    { file:'HAIR.MP4',  title:'Hair', lp:25, tp:80,   w:620, h:355, tilt:'1deg'   },
-    // Between row 2 and 3: top 1540, bottom 1886
-    { file:'Gap 3.mp4', title:'Gap',  lp:25, tp:1540, w:605, h:346, tilt:'-1.5deg'},
-    // Between row 4 and 5: top 3380, bottom 3724
-    { file:'Bam.mp4',   title:'Bam',  lp:25, tp:3380, w:600, h:344, tilt:'1.2deg' },
-  ];
+  /* Separate photo list for lightbox navigation */
+  const photos = allItems.filter(x => x.type === 'photo');
 
   /* ── LIGHTBOX ── */
   let lbIndex = 0;
   const lbImg     = document.getElementById('lb-img');
-  const lbTitle   = document.getElementById('lb-title');
+  const lbTitleEl = document.getElementById('lb-title');
   const lbCounter = document.getElementById('lb-counter');
   const lightbox  = document.getElementById('lightbox');
 
-  function openLightbox(idx){
-    lbIndex = ((idx % photos.length) + photos.length) % photos.length;
+  function openLightbox(photoIndex){
+    lbIndex = ((photoIndex % photos.length) + photos.length) % photos.length;
     lbImg.src = photos[lbIndex].file;
     lbImg.alt = photos[lbIndex].title;
-    lbTitle.textContent = photos[lbIndex].title;
+    lbTitleEl.textContent = photos[lbIndex].title;
     lbCounter.textContent = `${lbIndex + 1} / ${photos.length}`;
     lightbox.classList.add('active');
   }
@@ -636,46 +497,40 @@
     if(e.key==='ArrowLeft')  openLightbox(lbIndex - 1);
   });
 
-  /* ── BUILD STAGE ── */
-  const stage = document.getElementById('stage');
+  /* ── BUILD GRID ── */
+  const grid = document.getElementById('hang-grid');
+  let photoCounter = 0;
 
-  photos.forEach((p, i)=>{
+  allItems.forEach(item => {
     const wrap = document.createElement('div');
-    wrap.className = 'scatter-item is-photo';
-    wrap.style.cssText = `left:${p.lp}%;top:${p.tp}px;width:${p.w}px;`;
-    const cardClass = p.noBorder ? 'photo-card no-border' : 'photo-card';
-    const faceStyle = `width:${p.w}px;height:${p.h}px;overflow:hidden;position:relative;`;
-    wrap.innerHTML = `
-      <div class="${cardClass}" style="--tilt:${p.tilt};width:${p.w}px">
-        <div class="face" style="${faceStyle}${p.contain ? 'background:#111;' : ''}">
-          <img src="${p.file}" alt="${p.title}" loading="lazy"
-            style="width:100%;height:100%;object-fit:${p.contain ? 'contain' : 'cover'};object-position:center center;display:block;">
-        </div>
-        <div class="photo-overlay">${p.title}</div>
-        ${p.noBorder ? '' : `<div class="polaroid-caption">${p.title}</div>`}
-      </div>`;
-    wrap.addEventListener('click', ()=> openLightbox(i));
-    stage.appendChild(wrap);
-  });
+    wrap.className = 'hang-item';
+    wrap.style.cssText = `--tilt:${item.tilt}; --sway:${item.sway};`;
 
-  videos.forEach(v=>{
-    const wrap = document.createElement('div');
-    wrap.className = 'scatter-item';
-    wrap.style.cssText = `left:${v.lp}%;top:${v.tp}px;width:${v.w}px;`;
-    wrap.innerHTML = `
-      <div class="video-wrap">
-        <div class="video-wire"></div>
-        <div class="clip clip-left"></div>
-        <div class="clip clip-right"></div>
-        <div class="video-card" style="--tilt:${v.tilt};width:${v.w}px">
-          <video src="${v.file}" style="height:${v.h}px"
-            autoplay muted loop playsinline preload="auto"
-            id="vid-${v.title}"></video>
-          <button class="sound-btn"
-            onclick="toggleSound(this,'vid-${v.title}')">🔇 Sound</button>
-        </div>
-      </div>`;
-    stage.appendChild(wrap);
+    if(item.type === 'photo'){
+      const cardClass = item.noBorder ? 'photo-card no-border' : 'photo-card';
+      const thisPhotoIndex = photoCounter++;
+      wrap.innerHTML = `
+        <div class="${cardClass}" style="width:${item.w}px">
+          <div class="face" style="width:${item.w}px;height:${item.h}px">
+            <img src="${item.file}" alt="${item.title}" loading="lazy"
+              style="object-fit:${item.contain ? 'contain' : 'cover'}">
+          </div>
+          <div class="photo-overlay">${item.title}</div>
+          ${item.noBorder ? '' : `<div class="polaroid-caption">${item.title}</div>`}
+        </div>`;
+      wrap.querySelector('.photo-card').addEventListener('click', ()=> openLightbox(thisPhotoIndex));
+    } else {
+      const vid = item.file;
+      const tid = 'vid-' + item.title.replace(/\s/g,'');
+      wrap.innerHTML = `
+        <div class="video-card" style="width:${item.w}px">
+          <video src="${vid}" style="height:${item.h}px"
+            autoplay muted loop playsinline preload="auto" id="${tid}"></video>
+          <button class="sound-btn" onclick="toggleSound(this,'${tid}')">🔇 Sound</button>
+        </div>`;
+    }
+
+    grid.appendChild(wrap);
   });
 
   function toggleSound(btn, id){
@@ -684,27 +539,19 @@
     btn.textContent = vid.muted ? '🔇 Sound' : '🔊 Mute';
   }
 
-  /* ── STAGE HEIGHT ── */
+  /* ── LOADER + STAGGERED REVEAL ── */
   window.addEventListener('load', ()=>{
-    let max = 0;
-    document.querySelectorAll('.scatter-item').forEach(el=>{
-      const b = parseInt(el.style.top) + el.offsetHeight;
-      if(b > max) max = b;
-    });
-    stage.style.height = (max + 220) + 'px';
-
-    /* ── DARKROOM LOADER then staggered develop ── */
     setTimeout(()=>{
       const loader = document.getElementById('loader');
       loader.classList.add('fade-out');
       setTimeout(()=> loader.style.display = 'none', 900);
 
-      /* Trigger develop animation staggered per item */
-      const cards = document.querySelectorAll('.photo-card, .video-card');
-      cards.forEach((card, i)=>{
+      document.querySelectorAll('.hang-item').forEach((item, i)=>{
         setTimeout(()=>{
-          card.classList.add('developing');
-        }, i * 220 + 200);
+          item.classList.add('visible');
+          const card = item.querySelector('.photo-card, .video-card');
+          if(card) card.classList.add('developing');
+        }, i * 160 + 200);
       });
     }, 2200);
   });
@@ -714,20 +561,16 @@
   photos.forEach((p, i)=>{
     const tile = document.createElement('div');
     tile.className = 'series-tile';
-    tile.innerHTML = `
-      <img src="${p.file}" alt="${p.title}" loading="lazy">
-      <div class="tile-label">${p.title}</div>`;
+    tile.innerHTML = `<img src="${p.file}" alt="${p.title}" loading="lazy"><div class="tile-label">${p.title}</div>`;
     tile.addEventListener('click', ()=> openLightbox(i));
     imagesGrid.appendChild(tile);
   });
 
   const movingGrid = document.getElementById('moving-grid');
-  videos.forEach(v=>{
+  allItems.filter(x => x.type === 'video').forEach(v=>{
     const tile = document.createElement('div');
     tile.className = 'series-tile';
-    tile.innerHTML = `
-      <video src="${v.file}" autoplay muted loop playsinline preload="auto"></video>
-      <div class="tile-label">${v.title}</div>`;
+    tile.innerHTML = `<video src="${v.file}" autoplay muted loop playsinline preload="auto"></video><div class="tile-label">${v.title}</div>`;
     movingGrid.appendChild(tile);
   });
 
