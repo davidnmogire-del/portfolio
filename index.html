@@ -87,13 +87,17 @@
   .navbar .brand{
     font-family:'OutOfAfrica', sans-serif;
     font-size:0.9rem; letter-spacing:0.15em; text-transform:uppercase; cursor:pointer;
+    background:none; border:none; color:inherit;
   }
   .navbar nav{ display:flex; gap:2rem; }
   .navbar nav a{
     font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase;
     opacity:0.75; transition:opacity 0.2s; cursor:pointer;
   }
-  .navbar nav a:hover{ opacity:1; text-decoration:underline; }
+  .navbar nav a:hover, .navbar nav a:focus-visible{ opacity:1; text-decoration:underline; }
+  .navbar .brand:focus-visible, .navbar nav a:focus-visible{
+    outline:1px solid var(--gold); outline-offset:3px;
+  }
 
   /* ── VIEWS ── */
   .view{ display:none; }
@@ -121,6 +125,7 @@
     animation:item-appear 0.6s ease forwards;
     animation-play-state:paused;
   }
+  .hang-item.visible{ animation-play-state:running; }
   .hang-item:hover{ z-index:40 !important; }
   @keyframes item-appear{
     from{ opacity:0; transform:translateY(16px); }
@@ -155,7 +160,9 @@
     65%{ transform:rotate(calc(var(--tilt) - 0.7deg)) translateX(-1px); }
   }
 
-  /* ── PHOTO CARD (Polaroid) ── */
+  /* ── PHOTO CARD (Polaroid) ──
+     Width is now a max-width cap; actual width is fluid (min(100%, var(--w)px))
+     so cards shrink to fit narrow columns instead of overflowing. */
   .photo-card{
     position:relative; cursor:pointer;
     background:#f5f2ec;
@@ -166,16 +173,18 @@
     animation:sway var(--sway,7s) ease-in-out infinite, develop 3s ease-out forwards;
     animation-play-state:paused, paused;
     transition:box-shadow 0.3s;
+    width:min(100%, var(--w));
   }
   .photo-card.developing{
     animation-play-state:running, running;
   }
-  .photo-card:hover{
+  .photo-card:hover, .photo-card:focus-visible{
     box-shadow:0 8px 20px rgba(0,0,0,0.4), 0 24px 50px rgba(0,0,0,0.35);
     animation-play-state:paused, running;
     z-index:50;
     transform:rotate(calc(var(--tilt)*0.1)) scale(1.04) translateY(-8px);
   }
+  .photo-card:focus-visible{ outline:1px solid var(--gold); outline-offset:4px; }
 
   @keyframes develop{
     0%{   filter:brightness(2.5) saturate(0) contrast(0.4) sepia(0.3); }
@@ -187,10 +196,11 @@
   .photo-card .face{
     position:relative; overflow:hidden;
     display:block;
+    width:100%;
   }
   .photo-card .face img{
-    display:block; width:100%; height:100%;
-    object-fit:cover; object-position:center center;
+    display:block; width:100%; height:auto;
+    object-fit:unset; object-position:unset;
   }
   /* Vignette */
   .photo-card .face::after{
@@ -207,8 +217,19 @@
     opacity:0; transition:opacity 0.25s;
     font-size:0.58rem; letter-spacing:0.16em; text-transform:uppercase;
     color:rgba(255,255,255,0.92); z-index:3;
+    pointer-events:none;
   }
   .photo-card:hover .photo-overlay{ opacity:1; }
+  /* Move overlay to bottom of face, not bottom of card */
+  .photo-card .face .overlay-inner{
+    position:absolute; bottom:0; left:0; right:0;
+    background:linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
+    padding:1.4rem 0.8rem 0.6rem;
+    opacity:0; transition:opacity 0.25s;
+    font-size:0.58rem; letter-spacing:0.16em; text-transform:uppercase;
+    color:rgba(255,255,255,0.92); z-index:3;
+  }
+  .photo-card:hover .overlay-inner, .photo-card:focus-visible .overlay-inner{ opacity:1; }
   /* Caption in the white polaroid strip */
   .polaroid-caption{
     position:absolute; bottom:0; left:9px; right:9px; height:50px;
@@ -216,7 +237,7 @@
     font-size:0.56rem; letter-spacing:0.14em; text-transform:uppercase;
     color:#7a6a58; opacity:0; transition:opacity 0.2s;
   }
-  .photo-card:hover .polaroid-caption{ opacity:1; }
+  .photo-card:hover .polaroid-caption, .photo-card:focus-visible .polaroid-caption{ opacity:1; }
 
   /* No-border variant (screenshot) */
   .photo-card.no-border{
@@ -236,6 +257,7 @@
     animation-play-state:paused;
     transition:box-shadow 0.3s;
     overflow:hidden;
+    width:min(100%, var(--w));
   }
   .video-card.developing{ animation-play-state:running; }
   .video-card:hover{
@@ -266,7 +288,7 @@
     font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
     padding:0.55rem 1.1rem; cursor:pointer; transition:background 0.2s, color 0.2s; white-space:nowrap;
   }
-  .back-btn:hover{ background:var(--gold); color:var(--ink); }
+  .back-btn:hover, .back-btn:focus-visible{ background:var(--gold); color:var(--ink); }
   .series-header h2{ font-size:clamp(1.6rem,4vw,2.4rem); }
   .series-grid{
     padding:2rem 2.5rem 5rem;
@@ -276,8 +298,10 @@
     cursor:pointer; overflow:hidden; position:relative;
     box-shadow:0 6px 20px rgba(0,0,0,0.4); transition:transform 0.3s, box-shadow 0.3s;
     filter:sepia(0.05) contrast(1.04);
+    background:none; border:none; padding:0; text-align:left; display:block; width:100%;
   }
-  .series-tile:hover{ transform:scale(1.02); box-shadow:0 14px 36px rgba(0,0,0,0.55); }
+  .series-tile:hover, .series-tile:focus-visible{ transform:scale(1.02); box-shadow:0 14px 36px rgba(0,0,0,0.55); }
+  .series-tile:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; }
   .series-tile img{ width:100%; height:320px; object-fit:cover; display:block; transition:transform 0.4s; }
   .series-tile:hover img{ transform:scale(1.05); }
   .series-tile video{ width:100%; height:320px; object-fit:cover; display:block; }
@@ -299,7 +323,7 @@
     border:1px solid var(--gold); color:var(--gold); padding:0.75rem 1.6rem;
     transition:background 0.2s, color 0.2s; margin-right:1rem; margin-bottom:1rem;
   }
-  .contact-link:hover{ background:var(--gold); color:var(--ink); }
+  .contact-link:hover, .contact-link:focus-visible{ background:var(--gold); color:var(--ink); }
 
   /* ── LIGHTBOX ── */
   .lightbox{
@@ -317,14 +341,14 @@
     width:42px; height:42px; border-radius:50%; font-size:1.2rem; cursor:pointer;
     transition:background 0.2s, color 0.2s;
   }
-  .lb-close:hover{ background:var(--gold); color:var(--ink); }
+  .lb-close:hover, .lb-close:focus-visible{ background:var(--gold); color:var(--ink); }
   .lb-nav{
     position:fixed; top:50%; transform:translateY(-50%);
     background:none; border:1px solid rgba(255,255,255,0.25); color:#fff;
     width:44px; height:44px; border-radius:50%; font-size:1.1rem; cursor:pointer;
     display:flex; align-items:center; justify-content:center; transition:background 0.2s;
   }
-  .lb-nav:hover{ background:rgba(255,255,255,0.1); }
+  .lb-nav:hover, .lb-nav:focus-visible{ background:rgba(255,255,255,0.1); }
   .lb-prev{ left:1.5rem; }
   .lb-next{ right:1.5rem; }
   .lb-counter{ position:fixed; bottom:1.8rem; left:50%; transform:translateX(-50%); font-size:0.58rem; letter-spacing:0.2em; color:rgba(255,255,255,0.3); }
@@ -359,11 +383,11 @@
 <!-- HOME -->
 <div class="view active" id="view-home">
   <header class="navbar">
-    <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
+    <button class="brand" onclick="showView('view-home')">Elijah Che Williams</button>
     <nav>
-      <a onclick="showView('view-images')">Images</a>
-      <a onclick="showView('view-moving')">Moving Images</a>
-      <a onclick="showView('view-about')">A Deeper Look</a>
+      <a href="#images" onclick="showView('view-images'); return false;">Images</a>
+      <a href="#moving" onclick="showView('view-moving'); return false;">Moving Images</a>
+      <a href="#about" onclick="showView('view-about'); return false;">A Deeper Look</a>
     </nav>
   </header>
   <div class="hang-wrap">
@@ -374,11 +398,11 @@
 <!-- IMAGES -->
 <div class="view" id="view-images">
   <header class="navbar">
-    <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
+    <button class="brand" onclick="showView('view-home')">Elijah Che Williams</button>
     <nav>
-      <a onclick="showView('view-images')">Images</a>
-      <a onclick="showView('view-moving')">Moving Images</a>
-      <a onclick="showView('view-about')">A Deeper Look</a>
+      <a href="#images" onclick="showView('view-images'); return false;">Images</a>
+      <a href="#moving" onclick="showView('view-moving'); return false;">Moving Images</a>
+      <a href="#about" onclick="showView('view-about'); return false;">A Deeper Look</a>
     </nav>
   </header>
   <div class="series-header">
@@ -391,11 +415,11 @@
 <!-- MOVING IMAGES -->
 <div class="view" id="view-moving">
   <header class="navbar">
-    <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
+    <button class="brand" onclick="showView('view-home')">Elijah Che Williams</button>
     <nav>
-      <a onclick="showView('view-images')">Images</a>
-      <a onclick="showView('view-moving')">Moving Images</a>
-      <a onclick="showView('view-about')">A Deeper Look</a>
+      <a href="#images" onclick="showView('view-images'); return false;">Images</a>
+      <a href="#moving" onclick="showView('view-moving'); return false;">Moving Images</a>
+      <a href="#about" onclick="showView('view-about'); return false;">A Deeper Look</a>
     </nav>
   </header>
   <div class="series-header">
@@ -408,11 +432,11 @@
 <!-- ABOUT -->
 <div class="view" id="view-about">
   <header class="navbar">
-    <div class="brand" onclick="showView('view-home')">Elijah Che Williams</div>
+    <button class="brand" onclick="showView('view-home')">Elijah Che Williams</button>
     <nav>
-      <a onclick="showView('view-images')">Images</a>
-      <a onclick="showView('view-moving')">Moving Images</a>
-      <a onclick="showView('view-about')">A Deeper Look</a>
+      <a href="#images" onclick="showView('view-images'); return false;">Images</a>
+      <a href="#moving" onclick="showView('view-moving'); return false;">Moving Images</a>
+      <a href="#about" onclick="showView('view-about'); return false;">A Deeper Look</a>
     </nav>
   </header>
   <div class="about-wrap">
@@ -422,16 +446,16 @@
     <div class="contact-block">
       <h3>Get in Touch</h3>
       <a class="contact-link" href="mailto:hello@elijahchewilliams.com">Email</a>
-      <a class="contact-link" href="https://instagram.com" target="_blank">Instagram</a>
+      <a class="contact-link" href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
     </div>
   </div>
 </div>
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
-  <button class="lb-close" id="lb-close">✕</button>
-  <button class="lb-nav lb-prev" id="lb-prev">‹</button>
-  <button class="lb-nav lb-next" id="lb-next">›</button>
+  <button class="lb-close" id="lb-close" aria-label="Close">✕</button>
+  <button class="lb-nav lb-prev" id="lb-prev" aria-label="Previous image">‹</button>
+  <button class="lb-nav lb-next" id="lb-next" aria-label="Next image">›</button>
   <div class="lb-inner">
     <img id="lb-img" src="" alt="">
     <p class="lb-title" id="lb-title"></p>
@@ -468,6 +492,11 @@
     { type:'photo', file:'IMG_0610.jpeg',  title:'Field',        w:375, h:562, tilt:'-1.5deg', sway:'7.9s', mt:'-35px'  },
   ];
 
+  /* Encode filenames (handles spaces etc.) without double-encoding if already safe */
+  function safeSrc(file){
+    return encodeURI(file);
+  }
+
   /* Separate photo list for lightbox navigation */
   const photos = allItems.filter(x => x.type === 'photo');
 
@@ -477,22 +506,29 @@
   const lbTitleEl = document.getElementById('lb-title');
   const lbCounter = document.getElementById('lb-counter');
   const lightbox  = document.getElementById('lightbox');
+  let lastFocused = null;
 
   function openLightbox(photoIndex){
+    lastFocused = document.activeElement;
     lbIndex = ((photoIndex % photos.length) + photos.length) % photos.length;
-    lbImg.src = photos[lbIndex].file;
+    lbImg.src = safeSrc(photos[lbIndex].file);
     lbImg.alt = photos[lbIndex].title;
     lbTitleEl.textContent = photos[lbIndex].title;
     lbCounter.textContent = `${lbIndex + 1} / ${photos.length}`;
     lightbox.classList.add('active');
+    document.getElementById('lb-close').focus();
+  }
+  function closeLightbox(){
+    lightbox.classList.remove('active');
+    if(lastFocused) lastFocused.focus();
   }
   document.getElementById('lb-prev').onclick = ()=> openLightbox(lbIndex - 1);
   document.getElementById('lb-next').onclick = ()=> openLightbox(lbIndex + 1);
-  document.getElementById('lb-close').onclick = ()=> lightbox.classList.remove('active');
-  lightbox.addEventListener('click', e=>{ if(e.target===lightbox) lightbox.classList.remove('active'); });
+  document.getElementById('lb-close').onclick = closeLightbox;
+  lightbox.addEventListener('click', e=>{ if(e.target===lightbox) closeLightbox(); });
   document.addEventListener('keydown', e=>{
     if(!lightbox.classList.contains('active')) return;
-    if(e.key==='Escape') lightbox.classList.remove('active');
+    if(e.key==='Escape') closeLightbox();
     if(e.key==='ArrowRight') openLightbox(lbIndex + 1);
     if(e.key==='ArrowLeft')  openLightbox(lbIndex - 1);
   });
@@ -504,29 +540,30 @@
   allItems.forEach(item => {
     const wrap = document.createElement('div');
     wrap.className = 'hang-item';
-    wrap.style.cssText = `--tilt:${item.tilt}; --sway:${item.sway}; margin-top:${item.mt || '0px'}; position:relative; z-index:1;`;
+    wrap.style.cssText = `--tilt:${item.tilt}; --sway:${item.sway}; --w:${item.w}px; margin-top:${item.mt || '0px'}; position:relative; z-index:1;`;
 
     if(item.type === 'photo'){
       const cardClass = item.noBorder ? 'photo-card no-border' : 'photo-card';
       const thisPhotoIndex = photoCounter++;
+      const src = safeSrc(item.file);
       wrap.innerHTML = `
-        <div class="${cardClass}" style="width:${item.w}px">
-          <div class="face" style="width:${item.w}px;height:${item.h}px">
-            <img src="${item.file}" alt="${item.title}" loading="lazy"
-              style="object-fit:${item.contain ? 'contain' : 'cover'}">
+        <button type="button" class="${cardClass}" aria-label="View ${item.title} full size">
+          <div class="face">
+            <img src="${src}" alt="${item.title}" loading="lazy"
+              style="${item.contain ? 'object-fit:contain;background:#111;height:'+item.h+'px;width:100%;display:block;' : ''}">
+            <div class="overlay-inner">${item.title}</div>
           </div>
-          <div class="photo-overlay">${item.title}</div>
           ${item.noBorder ? '' : `<div class="polaroid-caption">${item.title}</div>`}
-        </div>`;
+        </button>`;
       wrap.querySelector('.photo-card').addEventListener('click', ()=> openLightbox(thisPhotoIndex));
     } else {
-      const vid = item.file;
+      const vid = safeSrc(item.file);
       const tid = 'vid-' + item.title.replace(/\s/g,'');
       wrap.innerHTML = `
-        <div class="video-card" style="width:${item.w}px">
+        <div class="video-card">
           <video src="${vid}" style="height:${item.h}px"
-            autoplay muted loop playsinline preload="auto" id="${tid}"></video>
-          <button class="sound-btn" onclick="toggleSound(this,'${tid}')">🔇 Sound</button>
+            autoplay muted loop playsinline preload="none" id="${tid}"></video>
+          <button class="sound-btn" onclick="toggleSound(this,'${tid}')" aria-label="Toggle sound">🔇 Sound</button>
         </div>`;
     }
 
@@ -539,29 +576,65 @@
     btn.textContent = vid.muted ? '🔇 Sound' : '🔊 Mute';
   }
 
-  /* ── LOADER + STAGGERED REVEAL ── */
-  window.addEventListener('load', ()=>{
-    setTimeout(()=>{
-      const loader = document.getElementById('loader');
-      loader.classList.add('fade-out');
-      setTimeout(()=> loader.style.display = 'none', 900);
+  /* ── LOADER + STAGGERED REVEAL ──
+     Wrapped in try/catch with a hard fallback: if anything throws,
+     the loader is force-hidden and all items forced visible so the
+     page never gets stuck blank. */
+  function revealAll(){
+    document.getElementById('loader').style.display = 'none';
+    document.querySelectorAll('.hang-item').forEach(item=>{
+      item.classList.add('visible');
+      const card = item.querySelector('.photo-card, .video-card');
+      if(card) card.classList.add('developing');
+    });
+  }
 
-      document.querySelectorAll('.hang-item').forEach((item, i)=>{
-        setTimeout(()=>{
-          item.classList.add('visible');
-          const card = item.querySelector('.photo-card, .video-card');
-          if(card) card.classList.add('developing');
-        }, i * 160 + 200);
-      });
-    }, 2200);
+  window.addEventListener('load', ()=>{
+    try{
+      setTimeout(()=>{
+        const loader = document.getElementById('loader');
+        loader.classList.add('fade-out');
+        setTimeout(()=> loader.style.display = 'none', 900);
+
+        document.querySelectorAll('.hang-item').forEach((item, i)=>{
+          setTimeout(()=>{
+            item.classList.add('visible');
+            const card = item.querySelector('.photo-card, .video-card');
+            if(card) card.classList.add('developing');
+          }, i * 160 + 200);
+        });
+      }, 2200);
+    }catch(err){
+      console.error('Reveal animation failed, showing gallery immediately:', err);
+      revealAll();
+    }
   });
+  // Absolute safety net: whatever happens, never stay blank longer than ~6s.
+  setTimeout(revealAll, 6000);
+
+  /* Lazy-load videos only once their card scrolls near the viewport,
+     instead of every autoplay video downloading on page load. */
+  if('IntersectionObserver' in window){
+    const vidObserver = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const v = entry.target;
+          if(!v.src && v.dataset.src) v.src = v.dataset.src;
+          v.play?.().catch(()=>{});
+          vidObserver.unobserve(v);
+        }
+      });
+    }, { rootMargin:'200px' });
+    document.querySelectorAll('.video-card video').forEach(v=> vidObserver.observe(v));
+  }
 
   /* ── SERIES PAGES ── */
   const imagesGrid = document.getElementById('images-grid');
   photos.forEach((p, i)=>{
-    const tile = document.createElement('div');
+    const tile = document.createElement('button');
+    tile.type = 'button';
     tile.className = 'series-tile';
-    tile.innerHTML = `<img src="${p.file}" alt="${p.title}" loading="lazy"><div class="tile-label">${p.title}</div>`;
+    tile.innerHTML = `<img src="${safeSrc(p.file)}" alt="${p.title}" loading="lazy"><div class="tile-label">${p.title}</div>`;
     tile.addEventListener('click', ()=> openLightbox(i));
     imagesGrid.appendChild(tile);
   });
@@ -570,16 +643,37 @@
   allItems.filter(x => x.type === 'video').forEach(v=>{
     const tile = document.createElement('div');
     tile.className = 'series-tile';
-    tile.innerHTML = `<video src="${v.file}" autoplay muted loop playsinline preload="auto"></video><div class="tile-label">${v.title}</div>`;
+    tile.innerHTML = `<video src="${safeSrc(v.file)}" autoplay muted loop playsinline preload="none"></video><div class="tile-label">${v.title}</div>`;
     movingGrid.appendChild(tile);
   });
 
-  /* ── VIEW SWITCH ── */
-  function showView(id){
+  /* ── VIEW SWITCH (with hash-based deep linking + back button support) ── */
+  const viewIds = ['view-home','view-images','view-moving','view-about'];
+  const hashToView = { '': 'view-home', 'home':'view-home', 'images':'view-images', 'moving':'view-moving', 'about':'view-about' };
+  const viewToHash = { 'view-home':'', 'view-images':'images', 'view-moving':'moving', 'view-about':'about' };
+
+  function showView(id, pushHash = true){
     document.querySelectorAll('.view').forEach(v=> v.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     window.scrollTo({top:0, behavior:'instant'});
+    if(pushHash){
+      const hash = viewToHash[id] || '';
+      history.pushState({view:id}, '', hash ? `#${hash}` : location.pathname);
+    }
   }
+
+  window.addEventListener('popstate', ()=>{
+    const hash = location.hash.replace('#','');
+    const id = hashToView[hash] || 'view-home';
+    showView(id, false);
+  });
+
+  // Respect a direct link like page.html#images on first load
+  (function initFromHash(){
+    const hash = location.hash.replace('#','');
+    const id = hashToView[hash];
+    if(id && id !== 'view-home') showView(id, false);
+  })();
 </script>
 </body>
 </html>
