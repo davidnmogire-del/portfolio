@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Elijah Che Williams — Photography</title>
+<meta name="description" content="Elijah Che Williams is a photographer and visual artist based in the American South, working across street, studio, and film photography and video.">
+<meta name="theme-color" content="#c8101a">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Elijah Che Williams — Photography">
+<meta property="og:description" content="Photographer and visual artist based in the American South. Images and moving images.">
+<meta property="og:image" content="IMG_7441.jpeg">
+<meta property="og:url" content="">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Elijah Che Williams — Photography">
+<meta name="twitter:description" content="Photographer and visual artist based in the American South.">
+<meta name="twitter:image" content="IMG_7441.jpeg">
+
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23e0121f'/><text y='.9em' font-size='55' x='50%' text-anchor='middle' font-family='serif' fill='%23f3e6c8'>ECW</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -197,11 +213,22 @@
     position:relative; overflow:hidden;
     display:block;
     width:100%;
+    background:linear-gradient(135deg, #2a2018, #17110c);
   }
   .photo-card .face img{
     display:block; width:100%; height:auto;
     object-fit:unset; object-position:unset;
+    opacity:0; transition:opacity 0.5s ease;
   }
+  .photo-card .face img.loaded{ opacity:1; }
+  .photo-card .face img.img-error{ display:none; }
+  .face .img-fallback{
+    display:none; align-items:center; justify-content:center;
+    min-height:220px; padding:2rem 1rem; text-align:center;
+    font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:rgba(243,230,200,0.4);
+  }
+  .face .img-fallback.show{ display:flex; }
   /* Vignette */
   .photo-card .face::after{
     content:''; position:absolute; inset:0;
@@ -302,7 +329,9 @@
   }
   .series-tile:hover, .series-tile:focus-visible{ transform:scale(1.02); box-shadow:0 14px 36px rgba(0,0,0,0.55); }
   .series-tile:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; }
-  .series-tile img{ width:100%; height:320px; object-fit:cover; display:block; transition:transform 0.4s; }
+  .series-tile{ background-color:#2a2018; }
+  .series-tile img{ width:100%; height:320px; object-fit:cover; display:block; transition:transform 0.4s, opacity 0.5s; opacity:0; }
+  .series-tile img.loaded{ opacity:1; }
   .series-tile:hover img{ transform:scale(1.05); }
   .series-tile video{ width:100%; height:320px; object-fit:cover; display:block; }
   .series-tile .tile-label{
@@ -325,6 +354,30 @@
   }
   .contact-link:hover, .contact-link:focus-visible{ background:var(--gold); color:var(--ink); }
 
+  .contact-form{ margin-top:2rem; max-width:480px; }
+  .contact-form .form-row{ margin-bottom:1.1rem; display:flex; flex-direction:column; gap:0.4rem; }
+  .contact-form label{
+    font-size:0.62rem; letter-spacing:0.14em; text-transform:uppercase; opacity:0.6;
+  }
+  .contact-form input, .contact-form textarea{
+    background:rgba(243,230,200,0.06); border:1px solid rgba(243,230,200,0.25);
+    color:var(--cream); font-family:'Work Sans', sans-serif; font-size:0.9rem;
+    padding:0.7rem 0.8rem; resize:vertical;
+  }
+  .contact-form input:focus, .contact-form textarea:focus{
+    outline:none; border-color:var(--gold);
+  }
+  .contact-form button{
+    background:none; border:1px solid var(--gold); color:var(--gold);
+    font-family:'Work Sans', sans-serif; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase;
+    padding:0.75rem 1.6rem; cursor:pointer; transition:background 0.2s, color 0.2s;
+  }
+  .contact-form button:hover, .contact-form button:focus-visible{ background:var(--gold); color:var(--ink); }
+  .contact-form button:disabled{ opacity:0.5; cursor:default; }
+  .form-status{ margin-top:0.8rem; font-size:0.78rem; opacity:0.85; }
+  .form-status.error{ color:#ffb4b4; }
+  .form-status.success{ color:#c9f0c0; }
+
   /* ── LIGHTBOX ── */
   .lightbox{
     position:fixed; inset:0; background:rgba(5,2,1,0.97);
@@ -333,8 +386,15 @@
   }
   .lightbox.active{ display:flex; }
   .lb-inner{ max-width:900px; width:100%; text-align:center; }
-  .lb-inner img{ width:100%; max-height:82vh; object-fit:contain; display:block; filter:sepia(0.05) contrast(1.04); }
+  .lb-inner img{ width:100%; max-height:82vh; object-fit:contain; display:block; filter:sepia(0.05) contrast(1.04); background:#17110c; }
   .lb-title{ margin-top:0.8rem; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  .lb-actions{ margin-top:0.6rem; display:flex; gap:0.8rem; justify-content:center; }
+  .lb-action-btn{
+    background:none; border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7);
+    font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase;
+    padding:0.5rem 1rem; cursor:pointer; transition:border-color 0.2s, color 0.2s;
+  }
+  .lb-action-btn:hover, .lb-action-btn:focus-visible{ border-color:var(--gold); color:var(--gold); }
   .lb-close{
     position:fixed; top:1.8rem; right:1.8rem;
     background:none; border:1px solid var(--gold); color:var(--gold);
@@ -443,10 +503,28 @@
     <h2>A Deeper Look</h2>
     <p>Elijah Che Williams is a photographer and visual artist whose work explores identity, stillness, and the charged spaces between people and place. Shooting on both digital and film, his images sit at the intersection of documentary impulse and fashion editorial — street-found and studio-composed, raw and deliberate.</p>
     <p>Based in the American South, his work draws from the textures of everyday environments — peeling walls, open fields, winter light — and the people who move through them with grace.</p>
+    <p style="opacity:0.6; font-size:0.85rem; letter-spacing:0.04em;">Currently available for editorial, portrait, and personal-project bookings.</p>
     <div class="contact-block">
       <h3>Get in Touch</h3>
       <a class="contact-link" href="mailto:hello@elijahchewilliams.com">Email</a>
       <a class="contact-link" href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+
+      <form class="contact-form" id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="form-row">
+          <label for="cf-name">Name</label>
+          <input type="text" id="cf-name" name="name" required>
+        </div>
+        <div class="form-row">
+          <label for="cf-email">Email</label>
+          <input type="email" id="cf-email" name="email" required>
+        </div>
+        <div class="form-row">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" rows="4" required></textarea>
+        </div>
+        <button type="submit" id="cf-submit">Send</button>
+        <p class="form-status" id="cf-status" role="status" aria-live="polite"></p>
+      </form>
     </div>
   </div>
 </div>
@@ -459,6 +537,10 @@
   <div class="lb-inner">
     <img id="lb-img" src="" alt="">
     <p class="lb-title" id="lb-title"></p>
+    <div class="lb-actions">
+      <button class="lb-action-btn" id="lb-download">Download</button>
+      <button class="lb-action-btn" id="lb-share">Share</button>
+    </div>
   </div>
   <div class="lb-counter" id="lb-counter"></div>
 </div>
@@ -511,12 +593,34 @@
   function openLightbox(photoIndex){
     lastFocused = document.activeElement;
     lbIndex = ((photoIndex % photos.length) + photos.length) % photos.length;
-    lbImg.src = safeSrc(photos[lbIndex].file);
-    lbImg.alt = photos[lbIndex].title;
-    lbTitleEl.textContent = photos[lbIndex].title;
+    const photo = photos[lbIndex];
+    lbImg.src = safeSrc(photo.file);
+    lbImg.alt = photo.title;
+    lbTitleEl.textContent = photo.title;
     lbCounter.textContent = `${lbIndex + 1} / ${photos.length}`;
     lightbox.classList.add('active');
     document.getElementById('lb-close').focus();
+
+    const downloadBtn = document.getElementById('lb-download');
+    downloadBtn.onclick = ()=>{
+      const a = document.createElement('a');
+      a.href = safeSrc(photo.file);
+      a.download = photo.file;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    };
+
+    const shareBtn = document.getElementById('lb-share');
+    shareBtn.style.display = navigator.share ? '' : 'none';
+    shareBtn.onclick = async ()=>{
+      try{
+        await navigator.share({
+          title: `${photo.title} — Elijah Che Williams`,
+          url: location.href.split('#')[0] + '#images'
+        });
+      }catch(err){ /* user cancelled share, ignore */ }
+    };
   }
   function closeLightbox(){
     lightbox.classList.remove('active');
@@ -550,7 +654,10 @@
         <button type="button" class="${cardClass}" aria-label="View ${item.title} full size">
           <div class="face">
             <img src="${src}" alt="${item.title}" loading="lazy"
+              onload="this.classList.add('loaded')"
+              onerror="this.classList.add('img-error'); this.nextElementSibling.classList.add('show')"
               style="${item.contain ? 'object-fit:contain;background:#111;height:'+item.h+'px;width:100%;display:block;' : ''}">
+            <div class="img-fallback">Image unavailable</div>
             <div class="overlay-inner">${item.title}</div>
           </div>
           ${item.noBorder ? '' : `<div class="polaroid-caption">${item.title}</div>`}
@@ -634,7 +741,7 @@
     const tile = document.createElement('button');
     tile.type = 'button';
     tile.className = 'series-tile';
-    tile.innerHTML = `<img src="${safeSrc(p.file)}" alt="${p.title}" loading="lazy"><div class="tile-label">${p.title}</div>`;
+    tile.innerHTML = `<img src="${safeSrc(p.file)}" alt="${p.title}" loading="lazy" onload="this.classList.add('loaded')"><div class="tile-label">${p.title}</div>`;
     tile.addEventListener('click', ()=> openLightbox(i));
     imagesGrid.appendChild(tile);
   });
@@ -674,6 +781,52 @@
     const id = hashToView[hash];
     if(id && id !== 'view-home') showView(id, false);
   })();
+
+  /* ── CONTACT FORM ──
+     Submits via fetch to the Formspree endpoint above (or any similar
+     form backend) without a full page reload. Replace YOUR_FORM_ID with
+     a real Formspree form ID before going live — until then this will
+     fail gracefully and show an error message rather than break. */
+  const contactForm = document.getElementById('contact-form');
+  if(contactForm){
+    contactForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const submitBtn = document.getElementById('cf-submit');
+      const status = document.getElementById('cf-status');
+      const endpoint = contactForm.getAttribute('action');
+
+      if(!endpoint || endpoint.includes('YOUR_FORM_ID')){
+        status.textContent = 'Contact form isn\'t connected yet — please use the email link above for now.';
+        status.className = 'form-status error';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      status.textContent = 'Sending…';
+      status.className = 'form-status';
+
+      try{
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(contactForm)
+        });
+        if(res.ok){
+          status.textContent = 'Message sent — thank you.';
+          status.className = 'form-status success';
+          contactForm.reset();
+        } else {
+          status.textContent = 'Something went wrong. Please try the email link above.';
+          status.className = 'form-status error';
+        }
+      }catch(err){
+        status.textContent = 'Something went wrong. Please try the email link above.';
+        status.className = 'form-status error';
+      }finally{
+        submitBtn.disabled = false;
+      }
+    });
+  }
 </script>
 </body>
 </html>
