@@ -501,6 +501,23 @@
   <div class="series-grid" id="moving-grid"></div>
 </div>
 
+<!-- SERIES (dynamically populated per series, e.g. #series/stillness) -->
+<div class="view" id="view-series">
+  <header class="navbar">
+    <button class="brand" onclick="showView('view-home')">Elijah Che Williams</button>
+    <nav>
+      <a href="#images" onclick="showView('view-images'); return false;">Images</a>
+      <a href="#moving" onclick="showView('view-moving'); return false;">Moving Images</a>
+      <a href="#about" onclick="showView('view-about'); return false;">A Deeper Look</a>
+    </nav>
+  </header>
+  <div class="series-header">
+    <button class="back-btn" onclick="showView('view-home')">← Back</button>
+    <h2 id="series-view-title"></h2>
+  </div>
+  <div class="series-grid" id="series-grid"></div>
+</div>
+
 <!-- ABOUT -->
 <div class="view" id="view-about">
   <header class="navbar">
@@ -563,7 +580,7 @@
   /* All 17 items in grid order — left to right, top to bottom, 3 per row */
   const allItems = [
     // Row 1
-    { type:'photo', file:'IMG_7441.jpeg',  title:'Stillness',    w:380, h:570, tilt:'-3deg',   sway:'7.2s', mt:'0px'    },
+    { type:'photo', file:'IMG_7441.jpeg',  title:'Stillness',    w:380, h:570, tilt:'-3deg',   sway:'7.2s', mt:'0px',    series:'stillness' },
     { type:'video', file:'HAIR.MP4',       title:'Hair',         w:440, h:272, tilt:'0.8deg',  sway:'6.5s', mt:'60px'   },
     { type:'photo', file:'IMG_8381.jpeg',  title:'Blue',         w:375, h:562, tilt:'2.2deg',  sway:'8.1s', mt:'-40px'  },
     // Row 2
@@ -598,25 +615,45 @@
     return encodeURI(file);
   }
 
+  /* ── SERIES GROUPS ──
+     Each key is a series id used in the URL as #series/<id>.
+     Photos in a series don't need to also appear in allItems —
+     only the "cover" photo shown on the home grid needs a matching
+     `series` id on its allItems entry (see IMG_7441 above). */
+  const seriesData = {
+    stillness: {
+      title: 'Stillness',
+      photos: [
+        { file:'IMG_7441.jpeg', title:'Stillness I' },
+        { file:'IMG_7348.jpeg', title:'Stillness II' },
+        { file:'IMG_7465.jpeg', title:'Stillness III' },
+        { file:'IMG_7461.jpeg', title:'Stillness IV' },
+        { file:'IMG_7375.jpeg', title:'Stillness V' },
+      ]
+    }
+  };
+
   /* Separate photo list for lightbox navigation */
   const photos = allItems.filter(x => x.type === 'photo');
 
   /* ── LIGHTBOX ── */
   let lbIndex = 0;
+  let currentPool = photos; // default: navigate through all photos; a series view swaps this in
   const lbImg     = document.getElementById('lb-img');
   const lbTitleEl = document.getElementById('lb-title');
   const lbCounter = document.getElementById('lb-counter');
   const lightbox  = document.getElementById('lightbox');
   let lastFocused = null;
 
-  function openLightbox(photoIndex){
+  function openLightbox(photoIndex, pool){
+    if(pool) currentPool = pool;
     lastFocused = document.activeElement;
-    lbIndex = ((photoIndex % photos.length) + photos.length) % photos.length;
-    const photo = photos[lbIndex];
+    lbIndex = ((photoIndex % currentPool.length) + currentPool.length) % currentPool.length;
+    const photo = currentPool[lbIndex];
     lbImg.src = safeSrc(photo.file);
     lbImg.alt = photo.title;
     lbTitleEl.textContent = photo.title;
-    lbCounter.textContent = `${lbIndex + 1} / ${photos.length}`;
+    lbCounter.textContent = `${lbIndex + 1} / ${currentPool.length}`;
     lightbox.classList.add('active');
     document.getElementById('lb-close').focus();
 
@@ -669,19 +706,24 @@
       const cardClass = item.noBorder ? 'photo-card no-border' : 'photo-card';
       const thisPhotoIndex = photoCounter++;
       const src = safeSrc(item.file);
+      const captionText = item.series ? `${item.title} · View Series` : item.title;
       wrap.innerHTML = `
-        <button type="button" class="${cardClass}" aria-label="View ${item.title} full size">
+        <button type="button" class="${cardClass}" aria-label="${item.series ? `View the ${item.title} series` : `View ${item.title} full size`}">
           <div class="face">
             <img src="${src}" alt="${item.title}" loading="lazy"
               onload="this.classList.add('loaded')"
               onerror="this.classList.add('img-error'); this.nextElementSibling.classList.add('show')"
               style="${item.contain ? 'object-fit:contain;background:#111;height:'+item.h+'px;width:100%;display:block;' : ''}">
             <div class="img-fallback">Image unavailable</div>
-            <div class="overlay-inner">${item.title}</div>
+            <div class="overlay-inner">${captionText}</div>
           </div>
-          ${item.noBorder ? '' : `<div class="polaroid-caption">${item.title}</div>`}
+          ${item.noBorder ? '' : `<div class="polaroid-caption">${captionText}</div>`}
         </button>`;
-      wrap.querySelector('.photo-card').addEventListener('click', ()=> openLightbox(thisPhotoIndex));
+      if(item.series){
+        wrap.querySelector('.photo-card').addEventListener('click', ()=> showSeriesView(item.series));
+      } else {
+        wrap.querySelector('.photo-card').addEventListener('click', ()=> openLightbox(thisPhotoIndex, photos));
+      }
     } else {
       const vid = safeSrc(item.file);
       const tid = 'vid-' + item.title.replace(/\s/g,'');
@@ -764,7 +806,7 @@
     tile.type = 'button';
     tile.className = 'series-tile';
     tile.innerHTML = `<img src="${safeSrc(p.file)}" alt="${p.title}" loading="lazy" onload="this.classList.add('loaded')"><div class="tile-label">${p.title}</div>`;
-    tile.addEventListener('click', ()=> openLightbox(i));
+    tile.addEventListener('click', ()=> openLightbox(i, photos));
     imagesGrid.appendChild(tile);
   });
 
@@ -777,7 +819,7 @@
   });
 
   /* ── VIEW SWITCH (with hash-based deep linking + back button support) ── */
-  const viewIds = ['view-home','view-images','view-moving','view-about'];
+  const viewIds = ['view-home','view-images','view-moving','view-about','view-series'];
   const hashToView = { '': 'view-home', 'home':'view-home', 'images':'view-images', 'moving':'view-moving', 'about':'view-about' };
   const viewToHash = { 'view-home':'', 'view-images':'images', 'view-moving':'moving', 'view-about':'about' };
 
@@ -791,15 +833,52 @@
     }
   }
 
+  /* Show a series page: a grid of every photo in that series, each of
+     which opens the lightbox scoped to just that series (not the whole
+     site's photo pool). */
+  function showSeriesView(seriesId, pushHash = true){
+    const series = seriesData[seriesId];
+    if(!series){ showView('view-home'); return; }
+
+    document.querySelectorAll('.view').forEach(v=> v.classList.remove('active'));
+    document.getElementById('view-series').classList.add('active');
+    document.getElementById('series-view-title').textContent = series.title;
+
+    const seriesGrid = document.getElementById('series-grid');
+    seriesGrid.innerHTML = '';
+    const seriesPool = series.photos.map(p => ({ type:'photo', file:p.file, title:p.title }));
+    seriesPool.forEach((p, i)=>{
+      const tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'series-tile';
+      tile.innerHTML = `<img src="${safeSrc(p.file)}" alt="${p.title}" loading="lazy" onload="this.classList.add('loaded')"><div class="tile-label">${p.title}</div>`;
+      tile.addEventListener('click', ()=> openLightbox(i, seriesPool));
+      seriesGrid.appendChild(tile);
+    });
+
+    window.scrollTo({top:0, behavior:'instant'});
+    if(pushHash){
+      history.pushState({view:'view-series', series:seriesId}, '', `#series/${seriesId}`);
+    }
+  }
+
   window.addEventListener('popstate', ()=>{
     const hash = location.hash.replace('#','');
-    const id = hashToView[hash] || 'view-home';
-    showView(id, false);
+    if(hash.startsWith('series/')){
+      showSeriesView(hash.split('/')[1], false);
+    } else {
+      const id = hashToView[hash] || 'view-home';
+      showView(id, false);
+    }
   });
 
-  // Respect a direct link like page.html#images on first load
+  // Respect a direct link like page.html#images or page.html#series/stillness on first load
   (function initFromHash(){
     const hash = location.hash.replace('#','');
+    if(hash.startsWith('series/')){
+      showSeriesView(hash.split('/')[1], false);
+      return;
+    }
     const id = hashToView[hash];
     if(id && id !== 'view-home') showView(id, false);
   })();
