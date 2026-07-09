@@ -11,14 +11,14 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Elijah Che Williams — Photography">
 <meta property="og:description" content="Photographer and visual artist based in the American South. Images and moving images.">
-<meta property="og:image" content="IMG_7441.jpeg">
-<meta property="og:url" content="">
+<meta property="og:image" content="https://davidnmogire-del.github.io/portfolio/IMG_7441.jpeg">
+<meta property="og:url" content="https://davidnmogire-del.github.io/portfolio/">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Elijah Che Williams — Photography">
 <meta name="twitter:description" content="Photographer and visual artist based in the American South.">
-<meta name="twitter:image" content="IMG_7441.jpeg">
+<meta name="twitter:image" content="https://davidnmogire-del.github.io/portfolio/IMG_7441.jpeg">
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23e0121f'/><text y='.9em' font-size='55' x='50%' text-anchor='middle' font-family='serif' fill='%23f3e6c8'>ECW</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -273,27 +273,39 @@
   }
   .photo-card.no-border .photo-overlay{ bottom:0; left:0; right:0; }
 
-  /* ── VIDEO CARD ── */
+  /* ── VIDEO CARD (same cream polaroid frame + develop effect as photo-card) ── */
   .video-card{
     position:relative; cursor:pointer;
-    background:#000;
-    box-shadow:0 3px 8px rgba(0,0,0,0.3), 0 12px 30px rgba(0,0,0,0.45);
+    background:#f5f2ec;
+    padding:9px 9px 50px 9px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.25), 0 12px 30px rgba(0,0,0,0.4);
     transform-origin:center top;
     transform:rotate(var(--tilt));
-    animation:sway var(--sway,7s) ease-in-out infinite;
-    animation-play-state:paused;
+    animation:sway var(--sway,7s) ease-in-out infinite, develop 3s ease-out forwards;
+    animation-play-state:paused, paused;
     transition:box-shadow 0.3s;
-    overflow:hidden;
     width:min(100%, var(--w));
   }
-  .video-card.developing{ animation-play-state:running; }
+  .video-card.developing{ animation-play-state:running, running; }
   .video-card:hover{
-    box-shadow:0 8px 20px rgba(0,0,0,0.5), 0 24px 50px rgba(0,0,0,0.4);
-    animation-play-state:paused;
+    box-shadow:0 8px 20px rgba(0,0,0,0.4), 0 24px 50px rgba(0,0,0,0.35);
+    animation-play-state:paused, running;
     z-index:50;
     transform:rotate(calc(var(--tilt)*0.1)) scale(1.04) translateY(-8px);
   }
-  .video-card video{ display:block; width:100%; object-fit:cover; }
+  .video-card .face{
+    position:relative; overflow:hidden;
+    display:block; width:100%;
+    background:linear-gradient(135deg, #2a2018, #17110c);
+  }
+  .video-card .face video{ display:block; width:100%; object-fit:cover; }
+  /* Vignette, matching photo-card */
+  .video-card .face::after{
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,0.2) 100%);
+    pointer-events:none; z-index:2;
+  }
+  .video-card:hover .polaroid-caption, .video-card:focus-visible .polaroid-caption{ opacity:1; }
   .sound-btn{
     position:absolute; bottom:8px; right:10px;
     background:rgba(0,0,0,0.55); border:1px solid rgba(255,255,255,0.35);
@@ -507,8 +519,10 @@
     <div class="contact-block">
       <h3>Get in Touch</h3>
       <a class="contact-link" href="mailto:hello@elijahchewilliams.com">Email</a>
+      <!-- TODO: replace with Elijah's real Instagram URL, e.g. https://instagram.com/his_handle -->
       <a class="contact-link" href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
 
+      <!-- TODO: replace YOUR_FORM_ID with a real Formspree form ID once you create one at https://formspree.io -->
       <form class="contact-form" id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
         <div class="form-row">
           <label for="cf-name">Name</label>
@@ -575,6 +589,8 @@
     // Row 7
     { type:'photo', file:'IMG_0927.jpeg',  title:'Smirk',        w:440, h:293, tilt:'2deg',    sway:'7.3s', mt:'-45px'  },
     { type:'video', file:'I_I_See_See_Uu.mp4', title:'I See You', w:440, h:248, tilt:'-1deg',  sway:'6.9s', mt:'40px'   },
+    // Row 8
+    { type:'photo', file:'IMG_9759.jpeg',  title:'Checkmate',   w:440, h:296, tilt:'1.7deg',  sway:'7.7s', mt:'-40px'  },
   ];
 
   /* Encode filenames (handles spaces etc.) without double-encoding if already safe */
@@ -671,9 +687,12 @@
       const tid = 'vid-' + item.title.replace(/\s/g,'');
       wrap.innerHTML = `
         <div class="video-card">
-          <video src="${vid}" style="height:${item.h}px"
-            autoplay muted loop playsinline preload="none" id="${tid}"></video>
-          <button class="sound-btn" onclick="toggleSound(this,'${tid}')" aria-label="Toggle sound">🔇 Sound</button>
+          <div class="face">
+            <video src="${vid}" style="height:${item.h}px"
+              autoplay muted loop playsinline preload="none" id="${tid}"></video>
+            <button class="sound-btn" onclick="toggleSound(this,'${tid}')" aria-label="Toggle sound">🔇 Sound</button>
+          </div>
+          <div class="polaroid-caption">${item.title}</div>
         </div>`;
     }
 
