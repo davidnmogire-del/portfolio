@@ -441,6 +441,7 @@
   }
   @media(max-width:560px){
     .hang-grid{ grid-template-columns:1fr; }
+    .hang-grid > div{ margin-top:0 !important; }
     .navbar{ padding:1rem 1.2rem; }
     .navbar nav{ gap:0.8rem; }
     .navbar nav a{ font-size:0.6rem; }
@@ -451,6 +452,11 @@
     .photo-card, .video-card{ animation:none; filter:none; }
     body::before{ animation:none; }
     #loader{ display:none !important; }
+  }
+  /* Touch devices never trigger :hover before the tap itself navigates,
+     so captions/series hints would otherwise never be seen. */
+  @media(hover:none){
+    .polaroid-caption{ opacity:1; }
   }
 </style>
 </head>
@@ -801,6 +807,25 @@
     if(e.key==='ArrowRight') openLightbox(lbIndex + 1);
     if(e.key==='ArrowLeft')  openLightbox(lbIndex - 1);
   });
+
+  /* Swipe left/right to navigate on touch devices, since small arrow
+     buttons are a poor fit for thumb navigation. */
+  let touchStartX = null, touchStartY = null;
+  lightbox.addEventListener('touchstart', e=>{
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive:true });
+  lightbox.addEventListener('touchend', e=>{
+    if(touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    // Ignore mostly-vertical swipes (scrolling) and short accidental drags
+    if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5){
+      if(dx < 0) openLightbox(lbIndex + 1); // swipe left → next
+      else       openLightbox(lbIndex - 1); // swipe right → prev
+    }
+    touchStartX = null; touchStartY = null;
+  }, { passive:true });
 
   /* ── BUILD GRID ── */
   const grid = document.getElementById('hang-grid');
