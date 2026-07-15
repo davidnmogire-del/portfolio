@@ -137,7 +137,6 @@
   .hang-item{
     display:flex; flex-direction:column; align-items:center;
     position:relative;
-    padding-top:44px;
     opacity:0;
     animation:item-appear 0.6s ease forwards;
     animation-play-state:paused;
@@ -147,27 +146,6 @@
   @keyframes item-appear{
     from{ opacity:0; transform:translateY(16px); }
     to{ opacity:1; transform:translateY(0); }
-  }
-
-  /* String coming down from the nail */
-  .hang-item::before{
-    content:'';
-    position:absolute; top:0; left:50%;
-    transform:translateX(-50%);
-    width:1px; height:38px;
-    background:linear-gradient(to bottom, rgba(243,230,200,0.45), rgba(243,230,200,0.15));
-    z-index:2;
-  }
-  /* Nail / pin at top */
-  .hang-item::after{
-    content:'';
-    position:absolute; top:-5px; left:50%;
-    transform:translateX(-50%);
-    width:8px; height:8px;
-    border-radius:50%;
-    background:radial-gradient(circle at 35% 35%, #d0c0a0, #7a6040);
-    box-shadow:0 1px 3px rgba(0,0,0,0.5);
-    z-index:3;
   }
 
   /* Gentle sway */
@@ -571,7 +549,7 @@
     { type:'photo', file:'IMG_8381.jpeg',  title:'WASHED OVER',         w:375, h:562, tilt:'2.2deg',  sway:'8.1s', mt:'-40px', series:'blue' },
     // Row 2
     { type:'photo', file:'IMG_4776.jpeg',  title:"HER SISTER'S KEEPER",      w:440, h:296, tilt:'-1.5deg', sway:'7.8s', mt:'-60px', series:'sisters' },
-    { type:'photo', file:'IMG_8555.jpeg',  title:'Dusk Prayer',  w:435, h:292, tilt:'1.2deg',  sway:'6.9s', mt:'50px', series:'dusk-prayer' },
+    { type:'photo', file:'IMG_8555.jpeg',  title:"GOD'S LAND",  w:435, h:292, tilt:'1.2deg',  sway:'6.9s', mt:'50px', series:'dusk-prayer' },
     { type:'photo', file:'IMG_9195.jpeg',  title:'DAUGHTER OF THE DUST',     w:368, h:552, tilt:'-2.5deg', sway:'7.4s', mt:'-30px'  },
     // Row 3
     { type:'photo', file:'IMG_5498.jpeg',  title:'MOTHERHOOD',         w:372, h:558, tilt:'2.8deg',  sway:'8.3s', mt:'-50px', series:'bond' },
@@ -627,13 +605,13 @@
       ]
     },
     'dusk-prayer': {
-      title: 'Dusk Prayer',
+      title: "GOD'S LAND",
       photos: [
-        { file:'IMG_8555.jpeg', title:'Dusk Prayer I' },
-        { file:'IMG_8486.jpeg', title:'Dusk Prayer II' },
-        { file:'IMG_8536.jpeg', title:'Dusk Prayer III' },
-        { file:'IMG_8548.jpeg', title:'Dusk Prayer IV' },
-        { file:'IMG_8545.jpeg', title:'Dusk Prayer V' },
+        { file:'IMG_8555.jpeg', title:"GOD'S LAND I" },
+        { file:'IMG_8486.jpeg', title:"GOD'S LAND II" },
+        { file:'IMG_8536.jpeg', title:"GOD'S LAND III" },
+        { file:'IMG_8548.jpeg', title:"GOD'S LAND IV" },
+        { file:'IMG_8545.jpeg', title:"GOD'S LAND V" },
       ]
     },
     bond: {
