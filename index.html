@@ -737,7 +737,7 @@
     const photo = currentPool[lbIndex];
     lbImg.src = safeSrc(photo.file);
     lbImg.alt = photo.title;
-    lbTitleEl.textContent = photo.title;
+    lbTitleEl.textContent = photo.title.replace(/\s+(?:I{1,3}|IV|VI{0,2}|VII)$/, '');
     lbCounter.textContent = `${lbIndex + 1} / ${currentPool.length}`;
     lightbox.classList.add('active');
     document.getElementById('lb-close').focus();
@@ -954,7 +954,7 @@
       const tile = document.createElement('button');
       tile.type = 'button';
       tile.className = 'series-tile';
-      tile.innerHTML = `<img src="${safeSrc(p.file)}" alt="${p.title}" loading="lazy" onload="this.classList.add('loaded')"><div class="tile-label">${p.title}</div>`;
+      tile.innerHTML = `<img src="${safeSrc(p.file)}" alt="${p.title}" loading="lazy" onload="this.classList.add('loaded')">`;
       tile.addEventListener('click', ()=> openLightbox(i, seriesPool));
       seriesGrid.appendChild(tile);
     });
