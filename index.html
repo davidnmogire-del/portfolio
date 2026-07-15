@@ -566,34 +566,34 @@
   /* All 17 items in grid order — left to right, top to bottom, 3 per row */
   const allItems = [
     // Row 1
-    { type:'photo', file:'IMG_7441.jpeg',  title:'Stillness',    w:380, h:570, tilt:'-3deg',   sway:'7.2s', mt:'0px',    series:'stillness' },
-    { type:'video', file:'HAIR.MP4',       title:'Hair',         w:440, h:272, tilt:'0.8deg',  sway:'6.5s', mt:'60px'   },
-    { type:'photo', file:'IMG_8381.jpeg',  title:'Blue',         w:375, h:562, tilt:'2.2deg',  sway:'8.1s', mt:'-40px', series:'blue' },
+    { type:'photo', file:'IMG_7441.jpeg',  title:'THE IMAGE OF GOD',    w:380, h:570, tilt:'-3deg',   sway:'7.2s', mt:'0px',    series:'stillness' },
+    { type:'video', file:'HAIR.MP4',       title:'HER CROWN',         w:440, h:272, tilt:'0.8deg',  sway:'6.5s', mt:'60px'   },
+    { type:'photo', file:'IMG_8381.jpeg',  title:'WASHED OVER',         w:375, h:562, tilt:'2.2deg',  sway:'8.1s', mt:'-40px', series:'blue' },
     // Row 2
-    { type:'photo', file:'IMG_4776.jpeg',  title:'Sisters',      w:440, h:296, tilt:'-1.5deg', sway:'7.8s', mt:'-60px', series:'sisters' },
+    { type:'photo', file:'IMG_4776.jpeg',  title:"HER SISTER'S KEEPER",      w:440, h:296, tilt:'-1.5deg', sway:'7.8s', mt:'-60px', series:'sisters' },
     { type:'photo', file:'IMG_8555.jpeg',  title:'Dusk Prayer',  w:435, h:292, tilt:'1.2deg',  sway:'6.9s', mt:'50px', series:'dusk-prayer' },
-    { type:'photo', file:'IMG_9195.jpeg',  title:'The Wall',     w:368, h:552, tilt:'-2.5deg', sway:'7.4s', mt:'-30px'  },
+    { type:'photo', file:'IMG_9195.jpeg',  title:'DAUGHTER OF THE DUST',     w:368, h:552, tilt:'-2.5deg', sway:'7.4s', mt:'-30px'  },
     // Row 3
-    { type:'photo', file:'IMG_5498.jpeg',  title:'Bond',         w:372, h:558, tilt:'2.8deg',  sway:'8.3s', mt:'-50px', series:'bond' },
-    { type:'video', file:'Gap 3.mp4',      title:'Gap',          w:440, h:272, tilt:'-0.8deg', sway:'7.0s', mt:'40px'   },
-    { type:'photo', file:'IMG_7617.jpeg',  title:'Purple House', w:370, h:555, tilt:'1.6deg',  sway:'6.7s', mt:'-40px', series:'purple-house' },
+    { type:'photo', file:'IMG_5498.jpeg',  title:'MOTHERHOOD',         w:372, h:558, tilt:'2.8deg',  sway:'8.3s', mt:'-50px', series:'bond' },
+    { type:'video', file:'Gap 3.mp4',      title:'WAITING WHILE GAP',          w:440, h:272, tilt:'-0.8deg', sway:'7.0s', mt:'40px'   },
+    { type:'photo', file:'IMG_7617.jpeg',  title:"SATURDAY'S BEST", w:370, h:555, tilt:'1.6deg',  sway:'6.7s', mt:'-40px', series:'purple-house' },
     // Row 4
-    { type:'photo', file:'IMG_7069.jpeg',  title:'Night Wall',   w:440, h:296, tilt:'-2deg',   sway:'7.6s', mt:'-55px', series:'night-wall' },
-    { type:'photo', file:'IMG_7006.jpeg',  title:'Flower',       w:435, h:292, tilt:'1.4deg',  sway:'8.0s', mt:'30px',  series:'flower' },
-    { type:'photo', file:'IMG_0020.jpeg',  title:'Open',         w:438, h:294, tilt:'-1.2deg', sway:'7.2s', mt:'-35px', series:'open' },
+    { type:'photo', file:'IMG_7069.jpeg',  title:'A ROSE ON CONCRETE',   w:440, h:296, tilt:'-2deg',   sway:'7.6s', mt:'-55px', series:'night-wall' },
+    { type:'photo', file:'IMG_7006.jpeg',  title:'WHAT THE ANCESTORS PRAYED FOR',       w:435, h:292, tilt:'1.4deg',  sway:'8.0s', mt:'30px',  series:'flower' },
+    { type:'photo', file:'IMG_0020.jpeg',  title:'GRACED BY HIS PRESENCE',         w:438, h:294, tilt:'-1.2deg', sway:'7.2s', mt:'-35px', series:'open' },
     // Row 5
-    { type:'photo', file:'IMG_6595.jpeg',  title:'Yellow Dress', w:440, h:296, tilt:'-1.8deg', sway:'6.8s', mt:'-45px',  contain:true, series:'yellow-dress' },
-    { type:'video', file:'Bam.mp4',        title:'Bam',          w:438, h:270, tilt:'1.1deg',  sway:'7.5s', mt:'55px'   },
-    { type:'photo', file:'IMG_8762.jpeg',  title:'Yellow',       w:368, h:552, tilt:'-3deg',   sway:'8.2s', mt:'-50px', series:'yellow' },
+    { type:'photo', file:'IMG_6595.jpeg',  title:'HIS CHOSEN PEOPLE', w:440, h:296, tilt:'-1.8deg', sway:'6.8s', mt:'-45px',  contain:true, series:'yellow-dress' },
+    { type:'video', file:'Bam.mp4',        title:'THE STORY OF THE EAST COAST COWGIRL',          w:438, h:270, tilt:'1.1deg',  sway:'7.5s', mt:'55px'   },
+    { type:'photo', file:'IMG_8762.jpeg',  title:'HELD LIGHT',       w:368, h:552, tilt:'-3deg',   sway:'8.2s', mt:'-50px', series:'yellow' },
     // Row 6
-    { type:'photo', file:'IMG_9233.jpeg',  title:'Bedroom',      w:440, h:296, tilt:'-1.8deg', sway:'7.1s', mt:'-40px'  },
-    { type:'photo', file:'Screenshot 2026-07-05 103457.png', title:'Laughter', w:432, h:320, tilt:'1.4deg', sway:'6.6s', mt:'45px',  noBorder:true, series:'laughter' },
-    { type:'photo', file:'IMG_0610.jpeg',  title:'Field',        w:375, h:562, tilt:'-1.5deg', sway:'7.9s', mt:'-35px'  },
+    { type:'photo', file:'IMG_9233.jpeg',  title:"AIN'T THIS MY HOOD?",      w:440, h:296, tilt:'-1.8deg', sway:'7.1s', mt:'-40px'  },
+    { type:'photo', file:'Screenshot 2026-07-05 103457.png', title:'REFLECTION OF THE SPIRIT', w:432, h:320, tilt:'1.4deg', sway:'6.6s', mt:'45px',  noBorder:true, series:'laughter' },
+    { type:'photo', file:'IMG_0610.jpeg',  title:'A FIELD FULL OF DREAMS IS WHERE THEY TRIED TO BURY US',        w:375, h:562, tilt:'-1.5deg', sway:'7.9s', mt:'-35px'  },
     // Row 7
-    { type:'photo', file:'IMG_0927.jpeg',  title:'Smirk',        w:440, h:293, tilt:'2deg',    sway:'7.3s', mt:'-45px', series:'smirk' },
-    { type:'video', file:'I_I_See_See_Uu.mp4', title:'I See You', w:440, h:248, tilt:'-1deg',  sway:'6.9s', mt:'40px'   },
+    { type:'photo', file:'IMG_0927.jpeg',  title:'SMIRK SPRING SHOOT',        w:440, h:293, tilt:'2deg',    sway:'7.3s', mt:'-45px', series:'smirk' },
+    { type:'video', file:'I_I_See_See_Uu.mp4', title:"I DON'T LOVE YOU", w:440, h:248, tilt:'-1deg',  sway:'6.9s', mt:'40px'   },
     // Row 8
-    { type:'photo', file:'IMG_9759.jpeg',  title:'Checkmate',   w:440, h:296, tilt:'1.7deg',  sway:'7.7s', mt:'-40px', series:'checkmate' },
+    { type:'photo', file:'IMG_9759.jpeg',  title:'LOVE JONES BY MOYO SINGLE COVER',   w:440, h:296, tilt:'1.7deg',  sway:'7.7s', mt:'-40px', series:'checkmate' },
   ];
 
   /* Encode filenames (handles spaces etc.) without double-encoding if already safe */
@@ -608,22 +608,22 @@
      `series` id on its allItems entry (see IMG_7441 above). */
   const seriesData = {
     stillness: {
-      title: 'Stillness',
+      title: 'THE IMAGE OF GOD',
       photos: [
-        { file:'IMG_7441.jpeg', title:'Stillness I' },
-        { file:'IMG_7348.jpeg', title:'Stillness II' },
-        { file:'IMG_7465.jpeg', title:'Stillness III' },
-        { file:'IMG_7461.jpeg', title:'Stillness IV' },
-        { file:'IMG_7375.jpeg', title:'Stillness V' },
+        { file:'IMG_7441.jpeg', title:'THE IMAGE OF GOD I' },
+        { file:'IMG_7348.jpeg', title:'THE IMAGE OF GOD II' },
+        { file:'IMG_7465.jpeg', title:'THE IMAGE OF GOD III' },
+        { file:'IMG_7461.jpeg', title:'THE IMAGE OF GOD IV' },
+        { file:'IMG_7375.jpeg', title:'THE IMAGE OF GOD V' },
       ]
     },
     blue: {
-      title: 'Blue',
+      title: 'WASHED OVER',
       photos: [
-        { file:'IMG_8381.jpeg', title:'Blue I' },
-        { file:'IMG_8418.jpeg', title:'Blue II' },
-        { file:'IMG_8426.jpeg', title:'Blue III' },
-        { file:'IMG_8355.jpeg', title:'Blue IV' },
+        { file:'IMG_8381.jpeg', title:'WASHED OVER I' },
+        { file:'IMG_8418.jpeg', title:'WASHED OVER II' },
+        { file:'IMG_8426.jpeg', title:'WASHED OVER III' },
+        { file:'IMG_8355.jpeg', title:'WASHED OVER IV' },
       ]
     },
     'dusk-prayer': {
@@ -637,105 +637,105 @@
       ]
     },
     bond: {
-      title: 'Bond',
+      title: 'MOTHERHOOD',
       photos: [
-        { file:'IMG_5498.jpeg', title:'Bond I' },
-        { file:'IMG_5500.jpeg', title:'Bond II' },
-        { file:'IMG_5461.jpeg', title:'Bond III' },
-        { file:'IMG_5476.jpeg', title:'Bond IV' },
-        { file:'IMG_5484.jpeg', title:'Bond V' },
+        { file:'IMG_5498.jpeg', title:'MOTHERHOOD I' },
+        { file:'IMG_5500.jpeg', title:'MOTHERHOOD II' },
+        { file:'IMG_5461.jpeg', title:'MOTHERHOOD III' },
+        { file:'IMG_5476.jpeg', title:'MOTHERHOOD IV' },
+        { file:'IMG_5484.jpeg', title:'MOTHERHOOD V' },
       ]
     },
     sisters: {
-      title: 'Sisters',
+      title: "HER SISTER'S KEEPER",
       photos: [
-        { file:'IMG_4776.jpeg', title:'Sisters I' },
-        { file:'IMG_4785.jpeg', title:'Sisters II' },
-        { file:'IMG_4797.jpeg', title:'Sisters III' },
+        { file:'IMG_4776.jpeg', title:"HER SISTER'S KEEPER I" },
+        { file:'IMG_4785.jpeg', title:"HER SISTER'S KEEPER II" },
+        { file:'IMG_4797.jpeg', title:"HER SISTER'S KEEPER III" },
       ]
     },
     yellow: {
-      title: 'Yellow',
+      title: 'HELD LIGHT',
       photos: [
-        { file:'IMG_8762.jpeg', title:'Yellow I' },
-        { file:'IMG_8776.jpeg', title:'Yellow II' },
-        { file:'IMG_8707.jpeg', title:'Yellow III' },
-        { file:'IMG_8658.jpeg', title:'Yellow IV' },
-        { file:'IMG_8668.jpeg', title:'Yellow V' },
+        { file:'IMG_8762.jpeg', title:'HELD LIGHT I' },
+        { file:'IMG_8776.jpeg', title:'HELD LIGHT II' },
+        { file:'IMG_8707.jpeg', title:'HELD LIGHT III' },
+        { file:'IMG_8658.jpeg', title:'HELD LIGHT IV' },
+        { file:'IMG_8668.jpeg', title:'HELD LIGHT V' },
       ]
     },
     flower: {
-      title: 'Flower',
+      title: 'WHAT THE ANCESTORS PRAYED FOR',
       photos: [
-        { file:'IMG_7006.jpeg', title:'Flower I' },
-        { file:'IMG_6999.jpeg', title:'Flower II' },
-        { file:'IMG_7015.jpeg', title:'Flower III' },
-        { file:'IMG_7002.jpeg', title:'Flower IV' },
-        { file:'IMG_6986.jpeg', title:'Flower V' },
-        { file:'IMG_6988.jpeg', title:'Flower VI' },
-        { file:'IMG_7012.jpeg', title:'Flower VII' },
+        { file:'IMG_7006.jpeg', title:'WHAT THE ANCESTORS PRAYED FOR I' },
+        { file:'IMG_6999.jpeg', title:'WHAT THE ANCESTORS PRAYED FOR II' },
+        { file:'IMG_7015.jpeg', title:'WHAT THE ANCESTORS PRAYED FOR III' },
+        { file:'IMG_7002.jpeg', title:'WHAT THE ANCESTORS PRAYED FOR IV' },
+        { file:'IMG_6986.jpeg', title:'WHAT THE ANCESTORS PRAYED FOR V' },
+        { file:'IMG_6988.jpeg', title:'WHAT THE ANCESTORS PRAYED FOR VI' },
+        { file:'IMG_7012.jpeg', title:'WHAT THE ANCESTORS PRAYED FOR VII' },
       ]
     },
     'purple-house': {
-      title: 'Purple House',
+      title: "SATURDAY'S BEST",
       photos: [
-        { file:'IMG_7617.jpeg', title:'Purple House I' },
-        { file:'IMG_7699.jpeg', title:'Purple House II' },
-        { file:'IMG_7678.jpeg', title:'Purple House III' },
-        { file:'IMG_7656.jpeg', title:'Purple House IV' },
-        { file:'IMG_7706.jpeg', title:'Purple House V' },
-        { file:'IMG_7653.jpeg', title:'Purple House VI' },
+        { file:'IMG_7617.jpeg', title:"SATURDAY'S BEST I" },
+        { file:'IMG_7699.jpeg', title:"SATURDAY'S BEST II" },
+        { file:'IMG_7678.jpeg', title:"SATURDAY'S BEST III" },
+        { file:'IMG_7656.jpeg', title:"SATURDAY'S BEST IV" },
+        { file:'IMG_7706.jpeg', title:"SATURDAY'S BEST V" },
+        { file:'IMG_7653.jpeg', title:"SATURDAY'S BEST VI" },
       ]
     },
     open: {
-      title: 'Open',
+      title: 'GRACED BY HIS PRESENCE',
       photos: [
-        { file:'IMG_0020.jpeg', title:'Open I' },
-        { file:'IMG_9949.jpeg', title:'Open II' },
-        { file:'IMG_0059.jpeg', title:'Open III' },
+        { file:'IMG_0020.jpeg', title:'GRACED BY HIS PRESENCE I' },
+        { file:'IMG_9949.jpeg', title:'GRACED BY HIS PRESENCE II' },
+        { file:'IMG_0059.jpeg', title:'GRACED BY HIS PRESENCE III' },
       ]
     },
     laughter: {
-      title: 'Laughter',
+      title: 'REFLECTION OF THE SPIRIT',
       photos: [
-        { file:'Screenshot 2026-07-05 103457.png', title:'Laughter I' },
-        { file:'9CFE5C72-73ED-4C7D-9CD3-011A7632B03A.jpeg', title:'Laughter II' },
-        { file:'Screenshot 2026-07-14 104700.png', title:'Laughter III' },
+        { file:'Screenshot 2026-07-05 103457.png', title:'REFLECTION OF THE SPIRIT I' },
+        { file:'9CFE5C72-73ED-4C7D-9CD3-011A7632B03A.jpeg', title:'REFLECTION OF THE SPIRIT II' },
+        { file:'Screenshot 2026-07-14 104700.png', title:'REFLECTION OF THE SPIRIT III' },
       ]
     },
     'night-wall': {
-      title: 'Night Wall',
+      title: 'A ROSE ON CONCRETE',
       photos: [
-        { file:'IMG_7069.jpeg', title:'Night Wall I' },
-        { file:'IMG_7042.jpeg', title:'Night Wall II' },
-        { file:'IMG_7029.jpeg', title:'Night Wall III' },
+        { file:'IMG_7069.jpeg', title:'A ROSE ON CONCRETE I' },
+        { file:'IMG_7042.jpeg', title:'A ROSE ON CONCRETE II' },
+        { file:'IMG_7029.jpeg', title:'A ROSE ON CONCRETE III' },
       ]
     },
     'yellow-dress': {
-      title: 'Yellow Dress',
+      title: 'HIS CHOSEN PEOPLE',
       photos: [
-        { file:'IMG_6595.jpeg', title:'Yellow Dress I' },
-        { file:'IMG_6603.jpeg', title:'Yellow Dress II' },
-        { file:'IMG_6615.jpeg', title:'Yellow Dress III' },
+        { file:'IMG_6595.jpeg', title:'HIS CHOSEN PEOPLE I' },
+        { file:'IMG_6603.jpeg', title:'HIS CHOSEN PEOPLE II' },
+        { file:'IMG_6615.jpeg', title:'HIS CHOSEN PEOPLE III' },
       ]
     },
     checkmate: {
-      title: 'Checkmate',
+      title: 'LOVE JONES BY MOYO SINGLE COVER',
       photos: [
-        { file:'IMG_9759.jpeg', title:'Checkmate I' },
-        { file:'IMG_9785.jpeg', title:'Checkmate II' },
+        { file:'IMG_9759.jpeg', title:'LOVE JONES BY MOYO SINGLE COVER I' },
+        { file:'IMG_9785.jpeg', title:'LOVE JONES BY MOYO SINGLE COVER II' },
       ]
     },
     smirk: {
-      title: 'Smirk',
+      title: 'SMIRK SPRING SHOOT',
       photos: [
-        { file:'IMG_0927.jpeg', title:'Smirk I' },
-        { file:'IMG_0371.jpeg', title:'Smirk II' },
-        { file:'IMG_0458.jpeg', title:'Smirk III' },
-        { file:'IMG_0416.jpeg', title:'Smirk IV' },
-        { file:'IMG_0302.jpeg', title:'Smirk V' },
-        { file:'IMG_0854.jpeg', title:'Smirk VI' },
-        { file:'IMG_0850.jpeg', title:'Smirk VII' },
+        { file:'IMG_0927.jpeg', title:'SMIRK SPRING SHOOT I' },
+        { file:'IMG_0371.jpeg', title:'SMIRK SPRING SHOOT II' },
+        { file:'IMG_0458.jpeg', title:'SMIRK SPRING SHOOT III' },
+        { file:'IMG_0416.jpeg', title:'SMIRK SPRING SHOOT IV' },
+        { file:'IMG_0302.jpeg', title:'SMIRK SPRING SHOOT V' },
+        { file:'IMG_0854.jpeg', title:'SMIRK SPRING SHOOT VI' },
+        { file:'IMG_0850.jpeg', title:'SMIRK SPRING SHOOT VII' },
       ]
     }
   };
@@ -832,7 +832,7 @@
       const cardClass = item.noBorder ? 'photo-card no-border' : 'photo-card';
       const thisPhotoIndex = photoCounter++;
       const src = safeSrc(item.file);
-      const captionText = item.series ? `${item.title} · View Series` : item.title;
+      const captionText = item.title;
       wrap.innerHTML = `
         <button type="button" class="${cardClass}" aria-label="${item.series ? `View the ${item.title} series` : `View ${item.title} full size`}">
           <div class="face">
@@ -842,7 +842,7 @@
               style="${item.contain ? 'object-fit:contain;background:#111;height:'+item.h+'px;width:100%;display:block;' : ''}">
             <div class="img-fallback">Image unavailable</div>
           </div>
-          ${item.noBorder ? '' : `<div class="polaroid-caption">${captionText}</div>`}
+          ${item.noBorder ? '' : `<div class="polaroid-caption">&ldquo;${captionText}&rdquo;</div>`}
         </button>`;
       if(item.series){
         wrap.querySelector('.photo-card').addEventListener('click', ()=> showSeriesView(item.series));
@@ -859,7 +859,7 @@
               autoplay muted loop playsinline preload="none" id="${tid}"></video>
             <button class="sound-btn" onclick="toggleSound(this,'${tid}')" aria-label="Toggle sound">🔇 Sound</button>
           </div>
-          <div class="polaroid-caption">${item.title}</div>
+          <div class="polaroid-caption">&ldquo;${item.title}&rdquo;</div>
         </div>`;
     }
 
