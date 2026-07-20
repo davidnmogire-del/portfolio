@@ -613,6 +613,13 @@
     return encodeURI(file);
   }
 
+  /* Wrap a caption in curly quotes, unless the title already has its
+     own embedded quotation marks (avoids double-quoting titles like
+     '"LOVE JONES" SINGLE COVER'). */
+  function quoteWrap(text){
+    return text.includes('"') ? text : `&ldquo;${text}&rdquo;`;
+  }
+
   /* ── SERIES GROUPS ──
      Each key is a series id used in the URL as #series/<id>.
      Photos in a series don't need to also appear in allItems —
@@ -862,9 +869,9 @@
               onerror="this.classList.add('img-error'); this.nextElementSibling.classList.add('show')"
               style="${item.contain ? 'object-fit:contain;background:#111;height:'+item.h+'px;width:100%;display:block;' : ''}">
             <div class="img-fallback">Image unavailable</div>
-            ${item.noBorder ? `<div class="caption-overlay">&ldquo;${captionText}&rdquo;</div>` : ''}
+            ${item.noBorder ? `<div class="caption-overlay">${quoteWrap(captionText)}</div>` : ''}
           </div>
-          ${item.noBorder ? '' : `<div class="polaroid-caption">&ldquo;${captionText}&rdquo;</div>`}
+          ${item.noBorder ? '' : `<div class="polaroid-caption">${quoteWrap(captionText)}</div>`}
         </button>`;
       if(item.series){
         wrap.querySelector('.photo-card').addEventListener('click', ()=> showSeriesView(item.series));
@@ -881,7 +888,7 @@
               autoplay muted loop playsinline preload="none" id="${tid}"></video>
             <button class="sound-btn" onclick="toggleSound(this,'${tid}')" aria-label="Toggle sound">🔇 Sound</button>
           </div>
-          <div class="polaroid-caption">&ldquo;${item.title}&rdquo;</div>
+          <div class="polaroid-caption">${quoteWrap(item.title)}</div>
         </div>`;
     }
 
