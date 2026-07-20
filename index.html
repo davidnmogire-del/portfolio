@@ -180,6 +180,17 @@
     transform:rotate(calc(var(--tilt)*0.1)) scale(1.04) translateY(-8px);
   }
   .photo-card:focus-visible{ outline:1px solid var(--gold); outline-offset:4px; }
+  /* Static variant: no sway, no develop-in filter, no hover lift */
+  .photo-card.static{
+    animation:none; filter:none; cursor:default;
+    transform:rotate(var(--tilt));
+  }
+  .photo-card.static:hover, .photo-card.static:focus-visible{
+    box-shadow:0 3px 8px rgba(0,0,0,0.25), 0 12px 30px rgba(0,0,0,0.4);
+    transform:rotate(var(--tilt));
+    z-index:auto;
+  }
+  .photo-card.static .face img{ opacity:1; filter:none; }
 
   @keyframes develop{
     0%{   filter:brightness(2.5) saturate(0) contrast(0.4) sepia(0.3); }
@@ -528,9 +539,8 @@
     </nav>
   </header>
   <div class="about-wrap">
-    <h2>A Deeper Look</h2>
     <div style="--tilt:-2deg; --sway:7.4s; --w:280px; width:min(280px,70vw); margin:0 auto 1.5rem;">
-      <div class="photo-card developing">
+      <div class="photo-card static">
         <div class="face">
           <img src="IMG_1937.jpeg" alt="Elijah" loading="lazy" onload="this.classList.add('loaded')">
           <div class="img-fallback">Image unavailable</div>
