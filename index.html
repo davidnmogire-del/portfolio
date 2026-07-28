@@ -880,7 +880,7 @@
       }
     } else {
       const vid = safeSrc(item.file);
-      const tid = 'vid-' + item.title.replace(/\s/g,'');
+      const tid = 'vid-' + item.title.replace(/[^a-zA-Z0-9]/g,'');
       wrap.innerHTML = `
         <div class="video-card">
           <div class="face">
