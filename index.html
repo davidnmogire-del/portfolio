@@ -613,6 +613,9 @@
     // Row 11
     { type:'photo', file:'6V3A0042.jpeg', title:'ALL SKIN FOLK ARE KIN FOLK', w:375, h:562, tilt:'-1.8deg', sway:'7.5s', mt:'-35px', series:'skin-folk-kin-folk' },
     { type:'photo', file:'IMG_1751.jpeg', title:"BLUE'S WORTH MORE THAN GOLD", w:435, h:292, tilt:'1.5deg', sway:'7.3s', mt:'-40px', series:'blues-worth-more-than-gold' },
+    { type:'video', file:'compressed_output.mp4', title:'FRAGMENTED MEMORIES', w:440, h:272, tilt:'-1deg', sway:'7.1s', mt:'40px' },
+    // Row 12
+    { type:'photo', file:'GW3A3233.jpeg', title:'FRAGMENTED', w:375, h:562, tilt:'-2.2deg', sway:'7.8s', mt:'-35px', series:'fragmented' },
   ];
 
   /* Encode filenames (handles spaces etc.) without double-encoding if already safe */
@@ -833,6 +836,21 @@
         { file:'IMG_1799.jpeg', title:"BLUE'S WORTH MORE THAN GOLD III" },
         { file:'IMG_1700.jpeg', title:"BLUE'S WORTH MORE THAN GOLD IV" },
       ]
+    },
+    fragmented: {
+      title: 'FRAGMENTED',
+      photos: [
+        { file:'GW3A3233.jpeg', title:'FRAGMENTED I' },
+        { file:'GW3A3235.jpeg', title:'FRAGMENTED II' },
+        { file:'GW3A3262.jpeg', title:'FRAGMENTED III' },
+        { file:'GW3A3289.jpeg', title:'FRAGMENTED IV' },
+        { file:'GW3A3296.jpeg', title:'FRAGMENTED V' },
+        { file:'GW3A3299.jpeg', title:'FRAGMENTED VI' },
+        { file:'GW3A3301.jpeg', title:'FRAGMENTED VII' },
+        { file:'GW3A3303.jpeg', title:'FRAGMENTED VIII' },
+        { file:'GW3A3305.jpeg', title:'FRAGMENTED IX' },
+        { file:'GW3A3314.jpeg', title:'FRAGMENTED X' },
+      ]
     }
   };
 
@@ -855,7 +873,7 @@
     const photo = currentPool[lbIndex];
     lbImg.src = safeSrc(photo.file);
     lbImg.alt = photo.title;
-    lbTitleEl.textContent = photo.title.replace(/\s+(?:I{1,3}|IV|VI{0,2}|VII)$/, '');
+    lbTitleEl.textContent = photo.title.replace(/\s+[IVX]+$/, '');
     lbCounter.textContent = `${lbIndex + 1} / ${currentPool.length}`;
     lightbox.classList.add('active');
     document.getElementById('lb-close').focus();
